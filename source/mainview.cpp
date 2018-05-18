@@ -210,8 +210,25 @@ void MainView::Draw(BRect R)
 	BRect B = Bounds();
 	if(OriginalBitmap == NULL)
 	{//on fait un petit fill bon chic bon genre
-		 FillRect(B);
-		 return;
+
+		const pattern stripePattern = {0xcc, 0x66, 0x33, 0x99, 0xcc, 0x66, 0x33, 0x99};
+
+		BRect bounds = B;
+
+		SetHighColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+		FillRect(bounds);
+
+		SetDrawingMode(B_OP_ALPHA);
+		SetLowColor(0, 0, 0, 0);
+		SetHighColor(tint_color(ui_color(B_PANEL_BACKGROUND_COLOR),
+			B_DARKEN_2_TINT));
+
+		FillRect(bounds, B_SOLID_LOW);
+		StrokeRect(bounds);
+		FillRect(bounds.InsetBySelf(3, 3), stripePattern);
+
+		BView::Draw(R);
+		return;
 	}
 
 	offscreenBitmap  = new BBitmap(B, B_RGB32, true);

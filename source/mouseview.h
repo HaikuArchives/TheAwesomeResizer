@@ -2,7 +2,7 @@
 #define MOUSEVIEW_H
 
 #include <Box.h>
-//#include <StringView.h>
+#include <StringView.h>
 //#include <TextControl.h>
 //#include <CheckBox.h>
 //#include <Button.h>
