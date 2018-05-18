@@ -32,11 +32,11 @@ SRCS =  main.cpp fenetre.cpp mainview.cpp option.cpp optionview.cpp mousew.cpp m
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.
-RDEFS = 
+RDEFS = TAResizer.rdef
 
 #	Specify the resource files to use. Full or relative paths can be used.
 #	Both RDEFS and RSRCS can be utilized in the same Makefile.
-RSRCS =  TAResizer.rsrc
+RSRCS =
 
 # End Pe/Eddie support.
 # @<-src@ 

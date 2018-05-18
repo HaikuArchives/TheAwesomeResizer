@@ -10,10 +10,10 @@ OptionView::OptionView()
 {
 	SavedW = 640; SavedH = 480; CurrentEffect = -1;
 	
-	Largeur = new BTextControl("Width","Width", "", NULL);
+	Largeur = new BTextControl("Width","Width:", "", NULL);
 	Largeur->SetModificationMessage(new BMessage(MOD_WIDTH)); 
 
-	Hauteur = new BTextControl("Height", "Height", "", NULL);
+	Hauteur = new BTextControl("Height", "Height:", "", NULL);
 	Hauteur->SetModificationMessage(new BMessage(MOD_HEIGHT)); 
 
 	SaveW = new BButton("SaveW", "Save", new BMessage(SAVEW));
@@ -24,7 +24,7 @@ OptionView::OptionView()
 	CheckBox = new BCheckBox("Ratio", "Aspect Ratio", new BMessage(RATIO));
 	CheckBox->SetValue(B_CONTROL_ON);
 
-	FileName = new BTextControl("Filename","File", "", NULL);
+	FileName = new BTextControl("Filename","File:", "", NULL);
 
 	//Popup qui affiche tous les translators disponibles
 	Popup = new BPopUpMenu("Choose");
@@ -35,7 +35,7 @@ OptionView::OptionView()
 	((Resizer*)be_app)->Fenetre->Unlock();
 
 	//le menu qui affiche le popup de type de fichier
-	DropDownMenu = new BMenuField("DropTranslator", "As", Popup);
+	DropDownMenu = new BMenuField("DropTranslator", "Format:", Popup);
 
 	//Bouton pour reinitialiser l'image
 	Reset = new BButton("Reset", "Reset", new BMessage(RESET));
@@ -66,10 +66,10 @@ OptionView::OptionView()
 	//Bouton About
 	Web = new BButton(BRect(60, 225, 115, 225), "About", "About", new BMessage(ABOUT));
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
 		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
 
-		.AddGrid(0.0, 0.0)
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
 			.Add(Largeur->CreateLabelLayoutItem(), 0, 0)
 			.Add(Largeur->CreateTextViewLayoutItem(), 1, 0)
 //			.Add(SaveW, 2, 0)
@@ -78,25 +78,26 @@ OptionView::OptionView()
 			.Add(Hauteur->CreateTextViewLayoutItem(), 1, 1)
 //			.Add(SaveH, 2, 1)
 //			.Add(LoadH, 3, 1)
+			.Add(CheckBox, 1, 2)
 		.End()
-		.Add(CheckBox)
-		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_DEFAULT_SPACING))
-		.AddGrid(0.0, 0.0)
+		//.Add(CheckBox)
+//		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_DEFAULT_SPACING))
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
 			.Add(FileName->CreateLabelLayoutItem(), 0, 0)
 			.Add(FileName->CreateTextViewLayoutItem(), 1, 0)
 			.Add(DropDownMenu->CreateLabelLayoutItem(), 0,1)
 			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 1)
 		.End()
-		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_DEFAULT_SPACING))
-		.AddGrid(0.0, 0.0)
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
+//		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_DEFAULT_SPACING))
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
 			.Add(Reset, 0, 0)
 			.Add(Undo, 1, 0)
 			.Add(Smooth, 0, 1, 2)
-		.End()
-		.Add(DropDownEffect)
-		.AddGrid(0.0, 0.0)
-			.Add(Web, 0, 0)
-			.Add(Apply, 1, 0)
+			.Add(DropDownEffect, 0, 2, 2)
+			.Add(Web, 0, 3)
+			.Add(Apply, 1, 3)
 		.End();
 
 	Smooth->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));

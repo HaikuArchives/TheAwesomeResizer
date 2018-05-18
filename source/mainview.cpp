@@ -110,10 +110,15 @@ void MainView::ResizeImage()
 
 		//ratio = Largeur / Hauteur
 		if(Fenetre.bottom >= Fenetre.right / Ratio)
+		{
 			ResizeTo(Fenetre.right, Fenetre.right / Ratio); //ajustement en fonction de la largeur
+			Window()->ResizeTo(Fenetre.right, Fenetre.right / Ratio);
+		}
 		else
+		{
 			ResizeTo(Fenetre.bottom * Ratio, Fenetre.bottom); //ajustement en fonction de la hauteur
-
+			Window()->ResizeTo(Fenetre.bottom * Ratio, Fenetre.bottom);
+		}
 		Invalidate();
 	}	
 	
