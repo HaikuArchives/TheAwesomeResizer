@@ -215,10 +215,27 @@ void MainView::Draw(BRect R)
 	BRect B = Bounds();
 	if(OriginalBitmap == NULL)
 	{//on fait un petit fill bon chic bon genre
-
-		const pattern stripePattern = {0xcc, 0x66, 0x33, 0x99, 0xcc, 0x66, 0x33, 0x99};
-
 		BRect bounds = B;
+		const pattern stripePattern = {0xcc, 0x66, 0x33, 0x99, 0xcc, 0x66, 0x33, 0x99};
+		const char *stringMessage = "Drag and drop an image";
+
+		font_height fontHeight;
+		GetFontHeight(&fontHeight);
+		const char* text = stringMessage;
+
+		float width = StringWidth(text);
+
+		BString truncated;
+		if (width - 10 > bounds.Width()) {
+			truncated = stringMessage;
+			TruncateString(&truncated, B_TRUNCATE_END, bounds.Width());
+			text = truncated.String();
+			width = StringWidth(text);
+		}
+
+		float y = (bounds.top + bounds.bottom - ceilf(fontHeight.ascent)
+			- ceilf(fontHeight.descent)) / 2.0 + ceilf(fontHeight.ascent);
+		float x = (bounds.Width() - width) / 2.0;
 
 		SetHighColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 		FillRect(bounds);
@@ -231,6 +248,13 @@ void MainView::Draw(BRect R)
 		FillRect(bounds, B_SOLID_LOW);
 		StrokeRect(bounds);
 		FillRect(bounds.InsetBySelf(3, 3), stripePattern);
+
+		BRect labelBackground(x - 5, y - ceilf(fontHeight.ascent),
+			x + width + 5, y + ceilf(fontHeight.descent));
+		SetLowColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+		FillRect(labelBackground, B_SOLID_LOW);
+		SetHighColor(ui_color(B_PANEL_TEXT_COLOR));
+		DrawString(text, BPoint(x, y));
 
 		BView::Draw(R);
 		return;

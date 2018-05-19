@@ -114,7 +114,7 @@ void MainWindow::MessageReceived(BMessage * message)
 		
 		default:BWindow::MessageReceived(message);break;
 	}
-	SetTitle("The Awesome Resizer v3.2");
+	SetTitle("The Awesome Resizer");
 	UpdateIfNeeded();
 }
 //-------------------------------------------------------------------

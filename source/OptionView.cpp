@@ -24,7 +24,7 @@ OptionView::OptionView()
 	CheckBox = new BCheckBox("Ratio", "Aspect Ratio", new BMessage(RATIO));
 	CheckBox->SetValue(B_CONTROL_ON);
 
-	FileName = new BTextControl("Filename","File:", "", NULL);
+	FileName = new BTextControl("Filename","Filename:", "", NULL);
 
 	//Popup qui affiche tous les translators disponibles
 	Popup = new BPopUpMenu("Choose");
