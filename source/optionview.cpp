@@ -134,8 +134,15 @@ void OptionView::FillPopup()
 									BMessage* Message = new BMessage(CHANGE_OUTPUT);
 									Message->AddInt16("translator", i);
 									Message->AddInt16("output", k);
-									Popup->AddItem(new BMenuItem(FormatOut[k].name, Message));
+									BMenuItem* menuItem;
+									Popup->AddItem(menuItem = new BMenuItem(FormatOut[k].name, Message));
 									err = B_OK; //on a au moins un bon translator
+									// sensible default
+									if (strcmp(FormatOut[k].MIME, "image/png") == 0) {
+										menuItem->SetMarked(true);
+										((Resizer*)be_app)->Fenetre->Main->CurrentTranslator = i;
+										((Resizer*)be_app)->Fenetre->Main->CurrentOutput = k;
+									}
 								}
 							}
 						}
