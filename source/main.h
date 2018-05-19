@@ -3,9 +3,9 @@
 
 #include <Application.h> //BApplication
 #include <Entry.h>
-#include "fenetre.h" //la fenetre de l'application
-#include "option.h"
-#include "mousew.h"
+#include "MainWindow.h" //la fenetre de l'application
+#include "OptionWindow.h"
+#include "MouseWindow.h"
 
 class Resizer : public BApplication
 {

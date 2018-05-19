@@ -4,8 +4,8 @@
 #include <TranslationUtils.h>
 #include <Bitmap.h>
 #include <String.h>
+#include <View.h>
 #include "enum.h"
-#include "View.h"
 #include <deque>
 
 typedef deque<BBitmap*>::iterator ITER;

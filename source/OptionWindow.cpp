@@ -1,4 +1,4 @@
-#include "option.h"
+#include "OptionView.h"
 #include <AboutWindow.h>
 #include <Application.h>
 #include <LayoutBuilder.h>

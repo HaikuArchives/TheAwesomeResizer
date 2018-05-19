@@ -1,4 +1,4 @@
-#include "mousew.h"
+#include "MouseWindow.h"
 #include <Application.h>
 #include <LayoutBuilder.h>
 #include "main.h"

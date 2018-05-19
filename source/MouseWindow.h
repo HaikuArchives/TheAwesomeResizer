@@ -1,8 +1,8 @@
-#ifndef MOUSEW_H
-#define MOUSEW_H
+#ifndef MOUSEWINDOW_H
+#define MOUSEWINDOW_H
 
 #include <Window.h> //BWindow 
-#include "mouseview.h"
+#include "MouseView.h"
 #include "enum.h"
 
 class MouseWindow : public BWindow 

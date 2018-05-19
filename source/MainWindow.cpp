@@ -1,8 +1,8 @@
-#include "fenetre.h"
+#include "MainWindow.h"
 #include <Application.h>
 //-------------------------------------------------------------------
 MainWindow::MainWindow()
-	: BWindow(BRect(140, 30, 340, 130), "The Awesome Resizer v3.2", 
+	: BWindow(BRect(240, 30, 440, 130), "The Awesome Resizer",
 	B_TITLED_WINDOW, B_NOT_ZOOMABLE | B_WILL_ACCEPT_FIRST_CLICK)
 {
 	Main = new MainView();

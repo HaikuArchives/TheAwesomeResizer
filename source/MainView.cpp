@@ -1,4 +1,4 @@
-#include "mainview.h"
+#include "MainView.h"
 #include <Path.h>
 #include <TranslationUtils.h>
 #include <TranslatorRoster.h>

@@ -1,4 +1,4 @@
-#include "mouseview.h"
+#include "MouseView.h"
 #include <Application.h>
 #include <LayoutBuilder.h>
 #include <String.h>
