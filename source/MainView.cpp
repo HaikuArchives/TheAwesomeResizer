@@ -703,28 +703,28 @@ void MainView::Blur()
 			contour = 0;
 			CC = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col];
 
-			if(row >= 0) {T = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col]; contour++;}
+			if(row > 0) {T = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col]; contour++;}
 			else T = empty;
 
-			if(col >= 0) {L = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col-1]; contour++;}
+			if(col > 0) {L = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col-1]; contour++;}
 			else L = empty;
 
-			if(col < width)	{R = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col+1]; contour++;}
+			if(col < width - 1)	{R = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col+1]; contour++;}
 			else R = empty;
 			
-			if(row < height) {D = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col]; contour++;}
+			if(row < height - 1) {D = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col]; contour++;}
 			else D = empty;
 			
-			if(row >= 0 || col >= 0) {TL = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col-1]; contour++;}
+			if(row > 0 && col > 0) {TL = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col-1]; contour++;}
 			else TL = empty;
 			
-			if(row >= 0 || col < width) {TR = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col+1]; contour++;}
+			if(row > 0 && col < width - 1) {TR = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col+1]; contour++;}
 			else TR = empty;
 
-			if(row < height || col >= 0) {BL = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col-1]; contour++;}
+			if(row < height - 1 && col > 0) {BL = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col-1]; contour++;}
 			else BL = empty;
 			
-			if(row < height || col < width) {BR = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col+1]; contour++;}
+			if(row < height - 1 && col < width - 1) {BR = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col+1]; contour++;}
 			else BR = empty;
 
 			final.red = (int)((((L.red + R.red + T.red + D.red + TL.red + TR.red + BL.red + BR.red)
