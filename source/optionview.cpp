@@ -61,14 +61,13 @@ OptionView::OptionView()
 	Apply = new BButton("Apply", "Apply", new BMessage(APPLY));
 
 	//Bouton Coord
-	Coord = new BButton("Coord", "Coord", new BMessage(COORD));
+	Coord = new BButton("Coord", "Coordinates window", new BMessage(COORD));
 
 	//Bouton About
 	Web = new BButton("About", "About", new BMessage(B_ABOUT_REQUESTED));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
 		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
-
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
 			.Add(Largeur->CreateLabelLayoutItem(), 0, 0)
 			.Add(Largeur->CreateTextViewLayoutItem(), 1, 0)
@@ -79,29 +78,29 @@ OptionView::OptionView()
 //			.Add(SaveH, 2, 1)
 //			.Add(LoadH, 3, 1)
 			.Add(CheckBox, 1, 2)
-		.End()
-		//.Add(CheckBox)
-//		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_DEFAULT_SPACING))
-		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
-		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-			.Add(FileName->CreateLabelLayoutItem(), 0, 0)
-			.Add(FileName->CreateTextViewLayoutItem(), 1, 0)
-			.Add(DropDownMenu->CreateLabelLayoutItem(), 0,1)
-			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 1)
+			.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING), 0, 3)
+			.Add(FileName->CreateLabelLayoutItem(), 0, 4)
+			.Add(FileName->CreateTextViewLayoutItem(), 1, 4)
+			.Add(DropDownMenu->CreateLabelLayoutItem(), 0, 5)
+			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 5)
 		.End()
 		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
-//		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_DEFAULT_SPACING))
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-			.Add(Reset, 0, 0)
-			.Add(Undo, 1, 0)
-			.Add(Smooth, 0, 1, 2)
-			.Add(DropDownEffect, 0, 2, 2)
-			.Add(Web, 0, 3)
-			.Add(Apply, 1, 3)
+			.Add(Coord, 0, 0, 2)
+			.Add(Reset, 0, 1)
+			.Add(Undo, 1, 1)
+			.Add(Smooth, 0, 2, 2)
+			.Add(DropDownEffect, 0, 3, 2)
+			.Add(Web, 0, 4)
+			.Add(Apply, 1, 4)
 		.End();
 
 	Smooth->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
-
+	Reset->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Undo->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Web->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Apply->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Coord->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 }
 //----------------------------------------------------------------------
 void OptionView::FillPopup()

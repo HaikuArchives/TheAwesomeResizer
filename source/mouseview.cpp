@@ -1,17 +1,22 @@
 #include "mouseview.h"
-#include <String.h>
 #include <Application.h>
+#include <LayoutBuilder.h>
+#include <String.h>
 #include "main.h"
 #include <math.h>
 //----------------------------------------------------------------------
 MouseView::MouseView() 
-	: BBox(BRect(0, 0, 122, 232), "MouseBox")
+	: BView("MouseView", B_WILL_DRAW)
 {
-	Coord = new BStringView(BRect(5, 5, 80, 20), "Coord", "X:0 Y:0");
-	AddChild(Coord);
+	Coord = new BStringView("Coord", "X:0 Y:0");
+	Size = new BStringView("Size", "- x -");
 
-	Size = new BStringView(BRect(5, 20, 80, 35), "Size", "- x -");
-	AddChild(Size);
+	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
+		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
+			.Add(Coord)
+			.Add(Size)
+		.End();
+
 }
 //----------------------------------------------------------------------
 void MouseView::ShowCoord(float x, float y)

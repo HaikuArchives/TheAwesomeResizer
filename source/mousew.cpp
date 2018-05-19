@@ -1,15 +1,18 @@
 #include "mousew.h"
 #include <Application.h>
+#include <LayoutBuilder.h>
 #include "main.h"
 #include <stdlib.h>
 //-------------------------------------------------------------------
 MouseWindow::MouseWindow()
 	: BWindow(BRect(10, 320, 130, 360), "Coordinates", B_FLOATING_WINDOW, 
-	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_CLOSABLE)
+	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_CLOSABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	MouseV = new MouseView;
-	AddChild(MouseV);
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(MouseV);
 	IsVisible = false;
+	//MouseV->SetExplicitMinSize(BSize(100, B_SIZE_UNSET));
 //	LockH = 0;
 //	LockW = 0;
 }

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 //-------------------------------------------------------------------
 OptionWindow::OptionWindow()
-	: BWindow(BRect(10, 30, 10, 30), "Options", B_FLOATING_WINDOW,
+	: BWindow(BRect(10, 30, 10, 30), "Options", B_TITLED_WINDOW,
 	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	Option = new OptionView;
