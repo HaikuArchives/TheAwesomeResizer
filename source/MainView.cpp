@@ -259,14 +259,24 @@ void MainView::Draw(BRect R)
 		BView::Draw(R);
 		return;
 	}
-
+	delete offscreenBitmap;
 	offscreenBitmap  = new BBitmap(B, B_RGB32, true);
 	offscreenView = new BView(B, "", B_FOLLOW_NONE, (uint32)NULL);
 	offscreenBitmap->AddChild(offscreenView);
 
 	offscreenBitmap->Lock(); //protege le offscreenBitmap contre les intrusions
-	offscreenView->DrawBitmap(OriginalBitmap, B);
-	
+
+	((Resizer*)be_app)->Option->Lock();
+	bool smoothScaling = ((Resizer*)be_app)->Option->Option->Smooth->Value() != 0;
+	((Resizer*)be_app)->Option->Option->Sync();
+	((Resizer*)be_app)->Option->Unlock();
+
+	if (!smoothScaling || (OriginalBitmap->Bounds().Width() <= B.Width()
+		&& OriginalBitmap->Bounds().Height() <= B.Height()))
+			offscreenView->DrawBitmap(OriginalBitmap, OriginalBitmap->Bounds(), B, smoothScaling ? B_FILTER_BITMAP_BILINEAR : 0);
+	else {
+		SmoothScale(OriginalBitmap, offscreenBitmap);
+	}
 	//Draw the invalidated portion of the offscreen bitmap into the onscreen view
 	offscreenView->Sync(); //Synchronise la vue offscreen
 	DrawBitmap(offscreenBitmap); //Copie le bitmap a l'ecran
@@ -281,7 +291,7 @@ void MainView::Draw(BRect R)
 	}
 
 	delete offscreenView;
-	delete offscreenBitmap;
+	//delete offscreenBitmap;
 }
 //----------------------------------------------------------------------
 void MainView::MessageReceived(BMessage *message)
@@ -436,7 +446,7 @@ void MainView::Copy(BMessage * request)
 		BView* OffView = new BView(Bounds(), "", B_FOLLOW_NONE, (uint32)NULL);
 		temp->AddChild(OffView);
 		temp->Lock();
-		OffView->DrawBitmap(OriginalBitmap, Bounds());
+		OffView->DrawBitmap(offscreenBitmap, Bounds());
 		OffView->Sync();
 		temp->Unlock();
 		temp->RemoveChild(OffView);		
@@ -461,7 +471,7 @@ void MainView::Copy(BMessage * request)
 		BView* OffView = new BView(Bounds(), "", B_FOLLOW_NONE, (uint32)NULL);
 		ModifiedBitmap->AddChild(OffView);
 		ModifiedBitmap->Lock();
-		OffView->DrawBitmap(OriginalBitmap, Bounds());
+		OffView->DrawBitmap(offscreenBitmap, Bounds());
 		OffView->Sync();
 		ModifiedBitmap->Unlock();
 		ModifiedBitmap->RemoveChild(OffView);		
@@ -869,6 +879,46 @@ void MainView::SmoothScale()
 	Invalidate();
 }
 //-------------------------------------------------------------------
+
+//-------------------------------------------------------------------
+void MainView::SmoothScale(BBitmap* origin, BBitmap* destination)
+{	/*Si on fait ca, le original bitmap est resize et on peut plus
+	revenir en arriere pour la size sans Reseter...*/
+	int x, y, z, cRed, cGreen, cBlue;
+	int ox=0; int oy=0; int ow=0; int oh=0;
+	if(origin == NULL) return;
+	int OwidthSize = (int)(origin->BytesPerRow()/4);
+	ow = (int)origin->Bounds().right+1;
+	oh = (int)origin->Bounds().bottom+1;
+	int w = (int)destination->Bounds().right+1;
+	int h = (int)destination->Bounds().bottom+1;
+
+	if((ow < w) || (oh < h))
+		return; //smooth scaling marche seulement en shrinking.
+
+	int widthSize = (int)(destination->BytesPerRow()/4);
+
+	for(y=0; y < h; y++)
+		for(x=0; x < w; x++)
+		{//pour chaque pixel
+			z=0; cRed=0; cGreen=0; cBlue=0;
+			for(oy = (y*oh)/h; oy < ((y+1)*oh)/h; oy++)
+				for(ox = (x*ow)/w; ox < ((x+1)*ow)/w; ox++)
+				{
+					cRed += ((rgb_color *)origin->Bits())[oy*OwidthSize + ox].red;
+					cGreen += ((rgb_color *)origin->Bits())[oy*OwidthSize + ox].green;
+					cBlue += ((rgb_color *)origin->Bits())[oy*OwidthSize + ox].blue;
+					z++; //prochain pixel
+				}
+			((rgb_color *)destination->Bits())[y*widthSize + x].red = cRed/z;
+			((rgb_color *)destination->Bits())[y*widthSize + x].green = cGreen/z;
+			((rgb_color *)destination->Bits())[y*widthSize + x].blue = cBlue/z;
+			((rgb_color *)destination->Bits())[y*widthSize + x].alpha = 255;
+		}
+}
+//-------------------------------------------------------------------
+
+
 void MainView::Melt()
 {
 	if(OriginalBitmap == NULL) return;

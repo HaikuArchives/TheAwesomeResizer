@@ -39,7 +39,7 @@ void MainWindow::MessageReceived(BMessage * message)
 		case UNDO: Main->Undo();break;
 
 		//Smooth scale l'image
-		case SMOOTH: Main->SmoothScale();break;
+		case SMOOTH: Main->Invalidate();break;
 
 		//rotation 90 degree
 		case ROTATE: Main->RotateImage();break;

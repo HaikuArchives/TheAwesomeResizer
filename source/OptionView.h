@@ -25,7 +25,7 @@ class OptionView : public BView
 	BCheckBox* CheckBox;
 	BButton* Reset;
 	BButton* Undo;
-	BButton* Smooth;
+	BCheckBox* Smooth;
 	BMenuField* DropDownMenu;
 	BPopUpMenu* Popup;	
 	BMenuField* DropDownEffect;

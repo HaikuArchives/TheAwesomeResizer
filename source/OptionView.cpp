@@ -44,7 +44,8 @@ OptionView::OptionView()
 	Undo = new BButton("Undo", "Undo", new BMessage(UNDO));
 
 	//Bouton pour smooth scaller l'image 
-	Smooth = new BButton("Smooth", "Smooth scaling", new BMessage(SMOOTH));
+//	Smooth = new BButton("Smooth", "Smooth scaling", new BMessage(SMOOTH));
+	Smooth = new BCheckBox("Smooth", "Smooth scaling", new BMessage(SMOOTH));
 
 	//Tout les effets possibles...
 	PopupEffect = new BPopUpMenu("Action");
@@ -77,22 +78,22 @@ OptionView::OptionView()
 			.Add(Hauteur->CreateTextViewLayoutItem(), 1, 1)
 //			.Add(SaveH, 2, 1)
 //			.Add(LoadH, 3, 1)
-			.Add(CheckBox, 1, 2)
-			.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING), 0, 3)
-			.Add(FileName->CreateLabelLayoutItem(), 0, 4)
-			.Add(FileName->CreateTextViewLayoutItem(), 1, 4)
-			.Add(DropDownMenu->CreateLabelLayoutItem(), 0, 5)
-			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 5)
+			.Add(CheckBox, 0, 2, 2)
+			.Add(Smooth, 0, 3, 2)
+			.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING), 0, 4)
+			.Add(FileName->CreateLabelLayoutItem(), 0, 5)
+			.Add(FileName->CreateTextViewLayoutItem(), 1, 5)
+			.Add(DropDownMenu->CreateLabelLayoutItem(), 0, 6)
+			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 6)
 		.End()
 		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
 			.Add(Coord, 0, 0, 2)
 			.Add(Reset, 0, 1)
 			.Add(Undo, 1, 1)
-			.Add(Smooth, 0, 2, 2)
-			.Add(DropDownEffect, 0, 3, 2)
-			.Add(Web, 0, 4)
-			.Add(Apply, 1, 4)
+			.Add(DropDownEffect, 0, 2, 2)
+			.Add(Web, 0, 3)
+			.Add(Apply, 1, 3)
 		.End();
 
 	Smooth->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
