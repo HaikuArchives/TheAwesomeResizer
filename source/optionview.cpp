@@ -44,7 +44,7 @@ OptionView::OptionView()
 	Undo = new BButton("Undo", "Undo", new BMessage(UNDO));
 
 	//Bouton pour smooth scaller l'image 
-	Smooth = new BButton(BRect(5, 150, 115, 150), "Smooth", "Smooth scaling", new BMessage(SMOOTH));
+	Smooth = new BButton("Smooth", "Smooth scaling", new BMessage(SMOOTH));
 
 	//Tout les effets possibles...
 	PopupEffect = new BPopUpMenu("Action");
@@ -55,16 +55,16 @@ OptionView::OptionView()
 	DropDownEffect->SetDivider(0);
 
 	//Bouton Grip
-	Grip = new BButton(BRect(5, 200, 60, 200), "Grip", "Grip", new BMessage(GRIP));
+	Grip = new BButton("Grip", "Grip", new BMessage(GRIP));
 
 	//Bouton Apply
 	Apply = new BButton("Apply", "Apply", new BMessage(APPLY));
 
 	//Bouton Coord
-	Coord = new BButton(BRect(5, 225, 60, 225), "Coord", "Coord", new BMessage(COORD));
+	Coord = new BButton("Coord", "Coord", new BMessage(COORD));
 
 	//Bouton About
-	Web = new BButton(BRect(60, 225, 115, 225), "About", "About", new BMessage(ABOUT));
+	Web = new BButton("About", "About", new BMessage(B_ABOUT_REQUESTED));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
 		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)

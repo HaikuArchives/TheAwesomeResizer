@@ -28,7 +28,7 @@ APP_MIME_SIG =
 #	means this Makefile will not work correctly if two source files with the
 #	same name (source.c or source.cpp) are included from different directories.
 #	Also note that spaces in folder names do not work well with this Makefile.
-SRCS =  main.cpp fenetre.cpp mainview.cpp option.cpp optionview.cpp mousew.cpp mouseview.cpp about.cpp
+SRCS =  main.cpp fenetre.cpp mainview.cpp option.cpp optionview.cpp mousew.cpp mouseview.cpp
 
 #	Specify the resource definition files to use. Full or relative paths can be
 #	used.
@@ -54,7 +54,7 @@ RSRCS =
 #	- 	if your library does not follow the standard library naming scheme,
 #		you need to specify the path to the library and it's name.
 #		(e.g. for mylib.a, specify "mylib.a" or "path/mylib.a")
-LIBS =  /boot/system/lib/libbe.so /boot/system/lib/libtranslation.so
+LIBS =  be translation
 
 #	Specify additional paths to directories following the standard libXXX.so
 #	or libXXX.a naming scheme. You can specify full paths or paths relative
@@ -66,12 +66,12 @@ LIBPATHS =
 #	Additional paths to look for system headers. These use the form
 #	"#include <header>". Directories that contain the files in SRCS are
 #	NOT auto-included here.
-SYSTEM_INCLUDE_PATHS =  /boot/develop/headers/be /boot/develop/headers/cpp /boot/develop/headers/posix /boot/develop/lib /boot/beos/system/lib
+SYSTEM_INCLUDE_PATHS =  $(shell findpaths -e B_FIND_PATH_HEADERS_DIRECTORY private/interface)
 
 #	Additional paths paths to look for local headers. These use the form
 #	#include "header". Directories that contain the files in SRCS are
 #	automatically included.
-LOCAL_INCLUDE_PATHS =  ../animator
+LOCAL_INCLUDE_PATHS =
 
 #	Specify the level of optimization that you want. Specify either NONE (O0),
 #	SOME (O1), FULL (O2), or leave blank (for the default optimization level).
