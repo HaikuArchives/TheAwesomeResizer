@@ -61,7 +61,7 @@ OptionView::OptionView()
 	Apply = new BButton("Apply", "Apply", new BMessage(APPLY));
 
 	//Bouton Coord
-	Coord = new BButton("Coord", "Coordinates window", new BMessage(COORD));
+	Coord = new BCheckBox("Coord", "Coordinates window", new BMessage(COORD));
 
 	//Bouton About
 	Web = new BButton("About", "About", new BMessage(B_ABOUT_REQUESTED));

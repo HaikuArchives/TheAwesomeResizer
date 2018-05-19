@@ -32,7 +32,7 @@ class OptionView : public BView
 	BPopUpMenu* PopupEffect;
 	BButton* Apply;
 	BButton* Web;
-	BButton* Coord;
+	BCheckBox* Coord;
 	BButton* Grip;
 	int SavedH;
 	int SavedW;
