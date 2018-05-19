@@ -1,4 +1,4 @@
-#include "mainview.h"
+#include "MainView.h"
 #include <Path.h>
 #include <TranslationUtils.h>
 #include <TranslatorRoster.h>
@@ -110,10 +110,15 @@ void MainView::ResizeImage()
 
 		//ratio = Largeur / Hauteur
 		if(Fenetre.bottom >= Fenetre.right / Ratio)
+		{
 			ResizeTo(Fenetre.right, Fenetre.right / Ratio); //ajustement en fonction de la largeur
+			Window()->ResizeTo(Fenetre.right, Fenetre.right / Ratio);
+		}
 		else
+		{
 			ResizeTo(Fenetre.bottom * Ratio, Fenetre.bottom); //ajustement en fonction de la hauteur
-
+			Window()->ResizeTo(Fenetre.bottom * Ratio, Fenetre.bottom);
+		}
 		Invalidate();
 	}	
 	
@@ -210,8 +215,49 @@ void MainView::Draw(BRect R)
 	BRect B = Bounds();
 	if(OriginalBitmap == NULL)
 	{//on fait un petit fill bon chic bon genre
-		 FillRect(B);
-		 return;
+		BRect bounds = B;
+		const pattern stripePattern = {0xcc, 0x66, 0x33, 0x99, 0xcc, 0x66, 0x33, 0x99};
+		const char *stringMessage = "Drag and drop an image";
+
+		font_height fontHeight;
+		GetFontHeight(&fontHeight);
+		const char* text = stringMessage;
+
+		float width = StringWidth(text);
+
+		BString truncated;
+		if (width - 10 > bounds.Width()) {
+			truncated = stringMessage;
+			TruncateString(&truncated, B_TRUNCATE_END, bounds.Width());
+			text = truncated.String();
+			width = StringWidth(text);
+		}
+
+		float y = (bounds.top + bounds.bottom - ceilf(fontHeight.ascent)
+			- ceilf(fontHeight.descent)) / 2.0 + ceilf(fontHeight.ascent);
+		float x = (bounds.Width() - width) / 2.0;
+
+		SetHighColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+		FillRect(bounds);
+
+		SetDrawingMode(B_OP_ALPHA);
+		SetLowColor(0, 0, 0, 0);
+		SetHighColor(tint_color(ui_color(B_PANEL_BACKGROUND_COLOR),
+			B_DARKEN_2_TINT));
+
+		FillRect(bounds, B_SOLID_LOW);
+		StrokeRect(bounds);
+		FillRect(bounds.InsetBySelf(3, 3), stripePattern);
+
+		BRect labelBackground(x - 5, y - ceilf(fontHeight.ascent),
+			x + width + 5, y + ceilf(fontHeight.descent));
+		SetLowColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+		FillRect(labelBackground, B_SOLID_LOW);
+		SetHighColor(ui_color(B_PANEL_TEXT_COLOR));
+		DrawString(text, BPoint(x, y));
+
+		BView::Draw(R);
+		return;
 	}
 
 	offscreenBitmap  = new BBitmap(B, B_RGB32, true);
@@ -657,28 +703,28 @@ void MainView::Blur()
 			contour = 0;
 			CC = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col];
 
-			if(row >= 0) {T = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col]; contour++;}
+			if(row > 0) {T = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col]; contour++;}
 			else T = empty;
 
-			if(col >= 0) {L = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col-1]; contour++;}
+			if(col > 0) {L = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col-1]; contour++;}
 			else L = empty;
 
-			if(col < width)	{R = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col+1]; contour++;}
+			if(col < width - 1)	{R = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col+1]; contour++;}
 			else R = empty;
 			
-			if(row < height) {D = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col]; contour++;}
+			if(row < height - 1) {D = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col]; contour++;}
 			else D = empty;
 			
-			if(row >= 0 || col >= 0) {TL = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col-1]; contour++;}
+			if(row > 0 && col > 0) {TL = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col-1]; contour++;}
 			else TL = empty;
 			
-			if(row >= 0 || col < width) {TR = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col+1]; contour++;}
+			if(row > 0 && col < width - 1) {TR = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col+1]; contour++;}
 			else TR = empty;
 
-			if(row < height || col >= 0) {BL = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col-1]; contour++;}
+			if(row < height - 1 && col > 0) {BL = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col-1]; contour++;}
 			else BL = empty;
 			
-			if(row < height || col < width) {BR = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col+1]; contour++;}
+			if(row < height - 1 && col < width - 1) {BR = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col+1]; contour++;}
 			else BR = empty;
 
 			final.red = (int)((((L.red + R.red + T.red + D.red + TL.red + TR.red + BL.red + BR.red)

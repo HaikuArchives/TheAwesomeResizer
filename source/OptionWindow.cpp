@@ -1,14 +1,17 @@
-#include "option.h"
+#include "OptionView.h"
+#include <AboutWindow.h>
 #include <Application.h>
+#include <LayoutBuilder.h>
 #include "main.h"
 #include <stdlib.h>
 //-------------------------------------------------------------------
 OptionWindow::OptionWindow()
-	: BWindow(BRect(10, 30, 130, 285), "Options", B_FLOATING_WINDOW, 
-	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE)
+	: BWindow(BRect(10, 30, 10, 30), "Options", B_TITLED_WINDOW,
+	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	Option = new OptionView;
-	AddChild(Option);
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(Option);
 	LockH = 0;
 	LockW = 0;
 }
@@ -44,7 +47,18 @@ void OptionWindow::MessageReceived(BMessage* message)
 		case GRIP:
 			((Resizer*)be_app)->Fenetre->PostMessage(message);break;
 
-		case ABOUT: ((Resizer*)be_app)->About->PostMessage(message);break;
+		case B_ABOUT_REQUESTED: {
+			BAboutWindow* aboutWin = new BAboutWindow("TAResizer", "application/x-vnd.TAResizer");
+			aboutWin->AddDescription("A simple application that allows quick dynamic resizing of any translator"
+			" supported image and much much more.");
+			aboutWin->AddCopyright(1999, "Jonathan Villemure");
+			const char* authors[] = {
+				"Jonathan Villemure",
+				NULL
+			};
+			aboutWin->AddAuthors(authors);
+			aboutWin->Show();
+		}
 		case COORD: ((Resizer*)be_app)->Mouse->PostMessage(message);break;
 		case SAVEH:	Option->SavedH = atoi(Option->Hauteur->Text());break;
 		case SAVEW:	Option->SavedW = atoi(Option->Largeur->Text());break;

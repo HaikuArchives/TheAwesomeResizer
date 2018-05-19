@@ -12,7 +12,7 @@
 #include <TranslatorRoster.h>
 #include "enum.h"
 
-class OptionView : public BBox
+class OptionView : public BView
 {
  public:
 	BTextControl* Hauteur;
@@ -32,7 +32,7 @@ class OptionView : public BBox
 	BPopUpMenu* PopupEffect;
 	BButton* Apply;
 	BButton* Web;
-	BButton* Coord;
+	BCheckBox* Coord;
 	BButton* Grip;
 	int SavedH;
 	int SavedW;

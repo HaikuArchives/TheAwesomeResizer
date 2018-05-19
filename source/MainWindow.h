@@ -1,8 +1,8 @@
-#ifndef FENETRE_H
-#define FENETRE_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <Window.h> //BWindow 
-#include "mainview.h"
+#include "MainView.h"
 #include "enum.h"
 
 class MainWindow : public BWindow 

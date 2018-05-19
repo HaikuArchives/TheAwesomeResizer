@@ -1,42 +1,30 @@
-#include "optionview.h"
+#include "OptionView.h"
 #include <String.h>
 #include <Application.h>
+#include <LayoutBuilder.h>
+#include <TranslatorFormats.h>
 #include "main.h"
 //----------------------------------------------------------------------
 OptionView::OptionView() 
-	: BBox(BRect(0, 0, 122, 257), "Box")
+	: BView("optionView", B_WILL_DRAW)
 {
 	SavedW = 640; SavedH = 480; CurrentEffect = -1;
 	
-	Largeur = new BTextControl(BRect(5, 5, 80, 5), "Width","Width", "", NULL);
+	Largeur = new BTextControl("Width","Width:", "", NULL);
 	Largeur->SetModificationMessage(new BMessage(MOD_WIDTH)); 
-	Largeur->SetDivider(35);
-	AddChild(Largeur); //Boite qui indique la largeur
 
-	Hauteur = new BTextControl(BRect(5, 30, 80, 30), "Height", "Height", "", NULL);
+	Hauteur = new BTextControl("Height", "Height:", "", NULL);
 	Hauteur->SetModificationMessage(new BMessage(MOD_HEIGHT)); 
-	Hauteur->SetDivider(35); 
-	AddChild(Hauteur); //Boite qui indique la Hauteur
 
-	SaveW = new BButton(BRect(80, 2, 100, 2), "SaveW", "S", new BMessage(SAVEW));
-	AddChild(SaveW); //Save Largeur
+	SaveW = new BButton("SaveW", "Save", new BMessage(SAVEW));
+	LoadW = new BButton("LoadW", "Load", new BMessage(LOADW));
+	SaveH = new BButton("SaveH", "Save", new BMessage(SAVEH));
+	LoadH = new BButton("LoadH", "Load", new BMessage(LOADH));
 
-	LoadW = new BButton(BRect(100, 2, 120, 2), "LoadW", "L", new BMessage(LOADW));
-	AddChild(LoadW); //Load Largeur
-
-	SaveH = new BButton(BRect(80, 27, 100, 27), "SaveH", "S", new BMessage(SAVEH));
-	AddChild(SaveH); //Save Hauteur
-
-	LoadH = new BButton(BRect(100, 27, 120, 27), "LoadH", "L", new BMessage(LOADH));
-	AddChild(LoadH); //Load Hauteur
-
-	CheckBox = new BCheckBox(BRect(5, 50, 110, 50), "Ratio", "Aspect Ratio", new BMessage(RATIO));
+	CheckBox = new BCheckBox("Ratio", "Aspect Ratio", new BMessage(RATIO));
 	CheckBox->SetValue(B_CONTROL_ON);
-	AddChild(CheckBox); //CheckBox pour dire si on veut conserver le ratio
 
-	FileName = new BTextControl(BRect(5, 80, 110, 80), "Filename","File", "", NULL);
-	FileName->SetDivider(20);
-	AddChild(FileName); //Boite qui permet de dire le nom du fichier output
+	FileName = new BTextControl("Filename","Filename:", "", NULL);
 
 	//Popup qui affiche tous les translators disponibles
 	Popup = new BPopUpMenu("Choose");
@@ -47,46 +35,72 @@ OptionView::OptionView()
 	((Resizer*)be_app)->Fenetre->Unlock();
 
 	//le menu qui affiche le popup de type de fichier
-	DropDownMenu = new BMenuField(BRect(5, 100, 120, 100), "DropTranslator", "As", Popup);
-	DropDownMenu->SetDivider(20);
-	AddChild(DropDownMenu);
+	DropDownMenu = new BMenuField("DropTranslator", "Format:", Popup);
 
 	//Bouton pour reinitialiser l'image
-	Reset = new BButton(BRect(5, 125, 60, 125), "Reset", "Reset", new BMessage(RESET));
-	AddChild(Reset);
+	Reset = new BButton("Reset", "Reset", new BMessage(RESET));
 
 	//Bouton pour undo
-	Undo = new BButton(BRect(60, 125, 115, 125), "Undo", "Undo", new BMessage(UNDO));
-	AddChild(Undo);
+	Undo = new BButton("Undo", "Undo", new BMessage(UNDO));
 
 	//Bouton pour smooth scaller l'image 
-	Smooth = new BButton(BRect(5, 150, 115, 150), "Smooth", "Smooth scaling", new BMessage(SMOOTH));
-	AddChild(Smooth);
+	Smooth = new BButton("Smooth", "Smooth scaling", new BMessage(SMOOTH));
 
 	//Tout les effets possibles...
 	PopupEffect = new BPopUpMenu("Action");
 	FillPopupEffect();
 
 	//le menu qui affiche le popup effect
-	DropDownEffect = new BMenuField(BRect(5, 175, 115, 175), "Effect", "", PopupEffect);
+	DropDownEffect = new BMenuField("Effect", "", PopupEffect);
 	DropDownEffect->SetDivider(0);
-	AddChild(DropDownEffect);
 
 	//Bouton Grip
-	Grip = new BButton(BRect(5, 200, 60, 200), "Grip", "Grip", new BMessage(GRIP));
-	AddChild(Grip);
+	Grip = new BButton("Grip", "Grip", new BMessage(GRIP));
 
 	//Bouton Apply
-	Apply = new BButton(BRect(60, 200, 115, 200), "Apply", "Do it !", new BMessage(APPLY));
-	AddChild(Apply);
+	Apply = new BButton("Apply", "Apply", new BMessage(APPLY));
 
 	//Bouton Coord
-	Coord = new BButton(BRect(5, 225, 60, 225), "Coord", "Coord", new BMessage(COORD));
-	AddChild(Coord);
+	Coord = new BCheckBox("Coord", "Coordinates window", new BMessage(COORD));
 
 	//Bouton About
-	Web = new BButton(BRect(60, 225, 115, 225), "About", "About", new BMessage(ABOUT));
-	AddChild(Web);
+	Web = new BButton("About", "About", new BMessage(B_ABOUT_REQUESTED));
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
+		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
+			.Add(Largeur->CreateLabelLayoutItem(), 0, 0)
+			.Add(Largeur->CreateTextViewLayoutItem(), 1, 0)
+//			.Add(SaveW, 2, 0)
+//			.Add(LoadW, 3, 0)
+			.Add(Hauteur->CreateLabelLayoutItem(), 0,1)
+			.Add(Hauteur->CreateTextViewLayoutItem(), 1, 1)
+//			.Add(SaveH, 2, 1)
+//			.Add(LoadH, 3, 1)
+			.Add(CheckBox, 1, 2)
+			.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING), 0, 3)
+			.Add(FileName->CreateLabelLayoutItem(), 0, 4)
+			.Add(FileName->CreateTextViewLayoutItem(), 1, 4)
+			.Add(DropDownMenu->CreateLabelLayoutItem(), 0, 5)
+			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 5)
+		.End()
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
+			.Add(Coord, 0, 0, 2)
+			.Add(Reset, 0, 1)
+			.Add(Undo, 1, 1)
+			.Add(Smooth, 0, 2, 2)
+			.Add(DropDownEffect, 0, 3, 2)
+			.Add(Web, 0, 4)
+			.Add(Apply, 1, 4)
+		.End();
+
+	Smooth->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Reset->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Undo->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Web->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Apply->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	Coord->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 }
 //----------------------------------------------------------------------
 void OptionView::FillPopup()
@@ -119,8 +133,15 @@ void OptionView::FillPopup()
 									BMessage* Message = new BMessage(CHANGE_OUTPUT);
 									Message->AddInt16("translator", i);
 									Message->AddInt16("output", k);
-									Popup->AddItem(new BMenuItem(FormatOut[k].name, Message));
+									BMenuItem* menuItem;
+									Popup->AddItem(menuItem = new BMenuItem(FormatOut[k].name, Message));
 									err = B_OK; //on a au moins un bon translator
+									// sensible default
+									if (strcmp(FormatOut[k].MIME, "image/png") == 0) {
+										menuItem->SetMarked(true);
+										((Resizer*)be_app)->Fenetre->Main->CurrentTranslator = i;
+										((Resizer*)be_app)->Fenetre->Main->CurrentOutput = k;
+									}
 								}
 							}
 						}

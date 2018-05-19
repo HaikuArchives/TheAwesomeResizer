@@ -14,11 +14,9 @@ Resizer::Resizer() : BApplication("application/x-vnd.TAResizer")
 	Fenetre = new MainWindow(); //fenetre ou est l'image
 	Option = new OptionWindow(); //fenetre d'option
 	Mouse = new MouseWindow(); //fenetre de la souris
-	About = new AboutBox(); //fenetre about
 	Fenetre->Show();
 	Option->Show();
 	Mouse->Run();
-	About->Run();
 }
 //--------------------------------------------------------------
 void Resizer::RefsReceived(BMessage *message) 

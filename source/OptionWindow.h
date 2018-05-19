@@ -1,8 +1,8 @@
-#ifndef OPTION_H
-#define OPTION_H
+#ifndef OPTIONWINDOW_H
+#define OPTIONWINDOW_H
 
 #include <Window.h> //BWindow 
-#include "optionview.h"
+#include "OptionView.h"
 #include "enum.h"
 
 class OptionWindow : public BWindow 
