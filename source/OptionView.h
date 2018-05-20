@@ -25,7 +25,7 @@ class OptionView : public BView
 	BCheckBox* CheckBox;
 	BButton* Reset;
 	BButton* Undo;
-	BButton* Smooth;
+	BCheckBox* Smooth;
 	BMenuField* DropDownMenu;
 	BPopUpMenu* Popup;	
 	BMenuField* DropDownEffect;
@@ -33,7 +33,7 @@ class OptionView : public BView
 	BButton* Apply;
 	BButton* Web;
 	BCheckBox* Coord;
-	BButton* Grip;
+	BCheckBox* Grip;
 	int SavedH;
 	int SavedW;
 	int CurrentEffect;

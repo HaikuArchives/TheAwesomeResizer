@@ -8,7 +8,7 @@ MouseWindow::MouseWindow()
 	: BWindow(BRect(10, 320, 130, 360), "Coordinates", B_FLOATING_WINDOW, 
 	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_CLOSABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
-	MouseV = new MouseView;
+	MouseV = new MouseView();
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(MouseV);
 	IsVisible = false;

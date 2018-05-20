@@ -3,7 +3,7 @@
 int main()
 {
 	Resizer* programme; 
-	programme = new Resizer;
+	programme = new Resizer();
 	programme->Run();  
 	delete programme;
 	return 0;

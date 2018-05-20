@@ -8,6 +8,8 @@
 #include "enum.h"
 #include <deque>
 
+using std::deque;
+
 typedef deque<BBitmap*>::iterator ITER;
 
 class MainView : public BView
@@ -39,6 +41,7 @@ class MainView : public BView
 	virtual void MouseDown(BPoint where);
 	virtual void MouseUp(BPoint where);
 	virtual void MouseMoved(BPoint point, uint32 transit, const BMessage* message);	
+	void SmoothScale(BBitmap* origin, BBitmap* destination);
 	void ToggleRatio();
 	void ResetImage();
 	void Copy(BMessage*);
