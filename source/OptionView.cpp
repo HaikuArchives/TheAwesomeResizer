@@ -10,10 +10,10 @@ OptionView::OptionView()
 {
 	SavedW = 640; SavedH = 480; CurrentEffect = -1;
 	
-	Largeur = new BTextControl("Width","Width:", "", NULL);
+	Largeur = new BTextControl("Width", B_EMPTY_STRING, "", NULL);
 	Largeur->SetModificationMessage(new BMessage(MOD_WIDTH)); 
 
-	Hauteur = new BTextControl("Height", "Height:", "", NULL);
+	Hauteur = new BTextControl("Height", B_EMPTY_STRING, "", NULL);
 	Hauteur->SetModificationMessage(new BMessage(MOD_HEIGHT)); 
 
 	SaveW = new BButton("SaveW", "Save", new BMessage(SAVEW));
@@ -21,7 +21,7 @@ OptionView::OptionView()
 	SaveH = new BButton("SaveH", "Save", new BMessage(SAVEH));
 	LoadH = new BButton("LoadH", "Load", new BMessage(LOADH));
 
-	CheckBox = new BCheckBox("Ratio", "Aspect Ratio", new BMessage(RATIO));
+	CheckBox = new BCheckBox("Ratio", "Preserve aspect ratio", new BMessage(RATIO));
 	CheckBox->SetValue(B_CONTROL_ON);
 
 	FileName = new BTextControl("Filename","Filename:", "", NULL);
@@ -46,17 +46,16 @@ OptionView::OptionView()
 	//Bouton pour smooth scaller l'image 
 //	Smooth = new BButton("Smooth", "Smooth scaling", new BMessage(SMOOTH));
 	Smooth = new BCheckBox("Smooth", "Smooth scaling", new BMessage(SMOOTH));
-
+	Smooth->SetValue(B_CONTROL_ON);
 	//Tout les effets possibles...
-	PopupEffect = new BPopUpMenu("Action");
+	PopupEffect = new BPopUpMenu("Choose an action");
 	FillPopupEffect();
 
 	//le menu qui affiche le popup effect
-	DropDownEffect = new BMenuField("Effect", "", PopupEffect);
-	DropDownEffect->SetDivider(0);
+	DropDownEffect = new BMenuField("Effect", /*"Action:"*/ B_EMPTY_STRING, PopupEffect);
 
 	//Bouton Grip
-	Grip = new BButton("Grip", "Grip", new BMessage(GRIP));
+	Grip = new BCheckBox("Grip", "Show grip", new BMessage(GRIP));
 
 	//Bouton Apply
 	Apply = new BButton("Apply", "Apply", new BMessage(APPLY));
@@ -69,31 +68,30 @@ OptionView::OptionView()
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
 		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
-		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-			.Add(Largeur->CreateLabelLayoutItem(), 0, 0)
-			.Add(Largeur->CreateTextViewLayoutItem(), 1, 0)
-//			.Add(SaveW, 2, 0)
-//			.Add(LoadW, 3, 0)
-			.Add(Hauteur->CreateLabelLayoutItem(), 0,1)
-			.Add(Hauteur->CreateTextViewLayoutItem(), 1, 1)
-//			.Add(SaveH, 2, 1)
-//			.Add(LoadH, 3, 1)
-			.Add(CheckBox, 0, 2, 2)
-			.Add(Smooth, 0, 3, 2)
-			.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING), 0, 4)
-			.Add(FileName->CreateLabelLayoutItem(), 0, 5)
-			.Add(FileName->CreateTextViewLayoutItem(), 1, 5)
-			.Add(DropDownMenu->CreateLabelLayoutItem(), 0, 6)
-			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 6)
+		.AddGroup(B_HORIZONTAL, B_USE_ITEM_SPACING)
+			.Add(new BStringView("Size", "Size:"))
+			.Add(Largeur)
+			.Add(new BStringView("separator", "x"))
+			.Add(Hauteur)
 		.End()
+			.Add(CheckBox)
+			.Add(Smooth)
+			.Add(Grip)
+//			.Add(Coord)
 		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-			.Add(Coord, 0, 0, 2)
-			.Add(Reset, 0, 1)
-			.Add(Undo, 1, 1)
-			.Add(DropDownEffect, 0, 2, 2)
-			.Add(Web, 0, 3)
-			.Add(Apply, 1, 3)
+			.Add(FileName->CreateLabelLayoutItem(), 0, 0)
+			.Add(FileName->CreateTextViewLayoutItem(), 1, 0)
+			.Add(DropDownMenu->CreateLabelLayoutItem(), 0, 1)
+			.Add(DropDownMenu->CreateMenuBarLayoutItem(), 1, 1)
+		.End()
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
+		.Add(DropDownEffect)
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
+			.Add(Reset, 0, 0)
+			.Add(Undo, 1, 0)
+//			.Add(Web, 0, 1)
+			.Add(Apply, 0, 1, 2)
 		.End();
 
 	Smooth->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));

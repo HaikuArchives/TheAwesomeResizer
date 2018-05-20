@@ -33,7 +33,7 @@ class OptionView : public BView
 	BButton* Apply;
 	BButton* Web;
 	BCheckBox* Coord;
-	BButton* Grip;
+	BCheckBox* Grip;
 	int SavedH;
 	int SavedW;
 	int CurrentEffect;
