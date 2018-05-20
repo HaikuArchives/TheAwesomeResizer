@@ -3,7 +3,7 @@
 #include <LayoutBuilder.h>
 #include <String.h>
 #include "main.h"
-#include <math.h>
+#include <stdlib.h>
 //----------------------------------------------------------------------
 MouseView::MouseView() 
 	: BView("MouseView", B_WILL_DRAW)

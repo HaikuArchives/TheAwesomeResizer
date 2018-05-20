@@ -8,6 +8,8 @@
 #include "enum.h"
 #include <deque>
 
+using std::deque;
+
 typedef deque<BBitmap*>::iterator ITER;
 
 class MainView : public BView
