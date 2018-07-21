@@ -83,6 +83,8 @@ void MainWindow::MessageReceived(BMessage * message)
 		//Pogne un screen shot de l'ecran sans le resizer
 		case DRUNK: Main->Drunk();break;
 
+		case DESKBKG: Main->AddDesktopBackground();break;
+
 		//Toggle la grip de la fenetre
 		case GRIP: 
 		{

@@ -226,6 +226,10 @@ void OptionView::FillPopupEffect()
 	Sgb->AddInt16("Effect", SGB);
 	PopupEffect->AddItem(new BMenuItem("Swap Green-Blue", Sgb));
 
+	BMessage* DeskBackground = new BMessage(CHANGE_EFFECT);
+	DeskBackground->AddInt16("Effect", DESKBKG);
+	PopupEffect->AddItem(new BMenuItem("Add desktop color", DeskBackground));
+
 	BMessage* Screenshot = new BMessage(CHANGE_EFFECT);
 	Screenshot->AddInt16("Effect", SCREENSHOT);
 	PopupEffect->AddItem(new BMenuItem("Screenshot", Screenshot));

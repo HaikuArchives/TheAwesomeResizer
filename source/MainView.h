@@ -61,6 +61,7 @@ class MainView : public BView
 	void InverseRG();
 	void InverseRB();
 	void InverseGB();
+	void AddDesktopBackground();
 	void SmoothScale();
 	void AddBitmap(BBitmap* B); //add a bitmap to the deque
 	void Undo(); //Go back to previous image in deque

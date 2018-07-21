@@ -45,6 +45,7 @@ void OptionWindow::MessageReceived(BMessage* message)
 		case SRB:
 		case SGB:
 		case GRIP:
+		case DESKBKG:
 			((Resizer*)be_app)->Fenetre->PostMessage(message);break;
 
 		case B_ABOUT_REQUESTED: {
