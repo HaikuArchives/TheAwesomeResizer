@@ -15,6 +15,62 @@
 #define min(a,b) ((a)>(b)?(b):(a))
 #define max(a,b) ((a)>(b)?(a):(b))
 //--------------------------------------------------------------------
+//				from ShowImage
+//--------------------------------------------------------------------
+
+const rgb_color kAlphaLow = (rgb_color) { 0xbb, 0xbb, 0xbb, 0xff };
+const rgb_color kAlphaHigh = (rgb_color) { 0xe0, 0xe0, 0xe0, 0xff };
+
+inline void
+blend_colors(uint8* d, uint8 r, uint8 g, uint8 b, uint8 a)
+{
+	d[0] = ((b - d[0]) * a + (d[0] << 8)) >> 8;
+	d[1] = ((g - d[1]) * a + (d[1] << 8)) >> 8;
+	d[2] = ((r - d[2]) * a + (d[2] << 8)) >> 8;
+}
+
+BBitmap*
+compose_checker_background(const BBitmap* bitmap)
+{
+	BBitmap* result = new (nothrow) BBitmap(bitmap);
+	if (result && !result->IsValid()) {
+		delete result;
+		result = NULL;
+	}
+	if (!result)
+		return NULL;
+
+	uint8* bits = (uint8*)result->Bits();
+	uint32 bpr = result->BytesPerRow();
+	uint32 width = result->Bounds().IntegerWidth() + 1;
+	uint32 height = result->Bounds().IntegerHeight() + 1;
+
+	for (uint32 i = 0; i < height; i++) {
+		uint8* p = bits;
+		for (uint32 x = 0; x < width; x++) {
+			uint8 alpha = p[3];
+			if (alpha < 255) {
+				p[3] = 255;
+				alpha = 255 - alpha;
+				if (x % 10 >= 5) {
+					if (i % 10 >= 5)
+						blend_colors(p, kAlphaLow.red, kAlphaLow.green, kAlphaLow.blue, alpha);
+					else
+						blend_colors(p, kAlphaHigh.red, kAlphaHigh.green, kAlphaHigh.blue, alpha);
+				} else {
+					if (i % 10 >= 5)
+						blend_colors(p, kAlphaHigh.red, kAlphaHigh.green, kAlphaHigh.blue, alpha);
+					else
+						blend_colors(p, kAlphaLow.red, kAlphaLow.green, kAlphaLow.blue, alpha);
+				}
+			}
+			p += 4;
+		}
+		bits += bpr;
+	}
+	return result;
+}
+//--------------------------------------------------------------------
 MainView::MainView() 
 	: BView(BRect(0, 0, 200, 100), "Image", B_FOLLOW_NONE, B_WILL_DRAW)
 {
@@ -64,7 +120,7 @@ bool MainView::GetImage(const char* path)
 
 	//on doit convertir le bitmap lu en RGB_32 pour que nos effets fonctionnent...
 	BRect B = AnyImageFormat->Bounds();
-	OriginalBitmap = new BBitmap(B, B_RGB32, true);
+	OriginalBitmap = new BBitmap(B, B_RGBA32, true);
 	offscreenView = new BView(B, "", B_FOLLOW_NONE, (uint32)NULL);
 	OriginalBitmap->AddChild(offscreenView);
 	OriginalBitmap->Lock(); 
@@ -260,7 +316,7 @@ void MainView::Draw(BRect R)
 		return;
 	}
 	delete offscreenBitmap;
-	offscreenBitmap  = new BBitmap(B, B_RGB32, true);
+	offscreenBitmap  = new BBitmap(B, B_RGBA32, true);
 	offscreenView = new BView(B, "", B_FOLLOW_NONE, (uint32)NULL);
 	offscreenBitmap->AddChild(offscreenView);
 
@@ -279,7 +335,8 @@ void MainView::Draw(BRect R)
 	}
 	//Draw the invalidated portion of the offscreen bitmap into the onscreen view
 	offscreenView->Sync(); //Synchronise la vue offscreen
-	DrawBitmap(offscreenBitmap); //Copie le bitmap a l'ecran
+	DrawBitmap(compose_checker_background(offscreenBitmap));
+//	DrawBitmap(offscreenBitmap); //Copie le bitmap a l'ecran
 	offscreenBitmap->Unlock(); //delock le bitmap offscreen
 	offscreenBitmap->RemoveChild(offscreenView);		
 
@@ -442,7 +499,7 @@ void MainView::Copy(BMessage * request)
 		BRect Destination = BRect(0,0,Source.right-Source.left, Source.bottom-Source.top);
 		
 		//Image temporaire que l'on size correctement
-		BBitmap* temp = new BBitmap(Bounds(), B_RGB32, true);
+		BBitmap* temp = new BBitmap(Bounds(), B_RGBA32, true);
 		BView* OffView = new BView(Bounds(), "", B_FOLLOW_NONE, (uint32)NULL);
 		temp->AddChild(OffView);
 		temp->Lock();
@@ -453,7 +510,7 @@ void MainView::Copy(BMessage * request)
 		delete OffView;
 
 		//applique le clipping sur cette image resizee
-		ModifiedBitmap = new BBitmap(Destination, B_RGB32, true);
+		ModifiedBitmap = new BBitmap(Destination, B_RGBA32, true);
 		OffView = new BView(Destination, "", B_FOLLOW_NONE, (uint32)NULL);
 		ModifiedBitmap->AddChild(OffView);
 		ModifiedBitmap->Lock();
@@ -467,7 +524,7 @@ void MainView::Copy(BMessage * request)
 	
 	else
 	{//on copie l'image au complet
-		ModifiedBitmap = new BBitmap(Bounds(), B_RGB32, true);
+		ModifiedBitmap = new BBitmap(Bounds(), B_RGBA32, true);
 		BView* OffView = new BView(Bounds(), "", B_FOLLOW_NONE, (uint32)NULL);
 		ModifiedBitmap->AddChild(OffView);
 		ModifiedBitmap->Lock();
@@ -565,7 +622,7 @@ void MainView::RotateImage()
 {//va creer un nouvelle image rotatee de 90 degree.
 	if(OriginalBitmap == NULL) return;
 	BRect coord = BRect(0, 0, OriginalBitmap->Bounds().bottom, OriginalBitmap->Bounds().right);
-	BBitmap* Spin = new BBitmap(coord, B_RGB32, true);
+	BBitmap* Spin = new BBitmap(coord, B_RGBA32, true);
 
 	int widthO = (int)OriginalBitmap->Bounds().right+1;
 	int heightO = (int)OriginalBitmap->Bounds().bottom+1;
@@ -592,7 +649,7 @@ void MainView::Flip(bool horizontal)
 	if(OriginalBitmap == NULL) return;
 	Clipping1 = BPoint(-1,-1);
 	Clipping2 = BPoint(-1,-1);
-	BBitmap* Flip = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Flip = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -622,7 +679,7 @@ void MainView::Flip(bool horizontal)
 void MainView::Dark() 
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -643,7 +700,8 @@ void MainView::Dark()
 			if(b < 0) b=0;
 			((rgb_color *)Darker->Bits())[row*widthSize + col].red = r; 
 			((rgb_color *)Darker->Bits())[row*widthSize + col].green = g; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = b; 
+			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = b;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].alpha = CurrentColor.alpha; 
 		}			
 	
 	AddBitmap(OriginalBitmap);
@@ -654,7 +712,7 @@ void MainView::Dark()
 void MainView::Light() 
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -676,6 +734,7 @@ void MainView::Light()
 			((rgb_color *)Darker->Bits())[row*widthSize + col].red = r; 
 			((rgb_color *)Darker->Bits())[row*widthSize + col].green = g; 
 			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = b; 
+			((rgb_color *)Darker->Bits())[row*widthSize + col].alpha = CurrentColor.alpha; 
 		}			
 
 	AddBitmap(OriginalBitmap);
@@ -686,7 +745,7 @@ void MainView::Light()
 void MainView::Blur()
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Blured = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Blured = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -743,6 +802,7 @@ void MainView::Blur()
 				/(4*contour))) + (CC.green * 0.75));
 			final.blue = (int)((((L.blue + R.blue + T.blue + D.blue + TL.blue + TR.blue + BL.blue + BR.blue)
 				/(4*contour))) + (CC.blue * 0.75));
+			final.alpha = CC.alpha;
 
 			((rgb_color *)Blured->Bits())[row*widthSize + col] = final;
 		}
@@ -778,7 +838,7 @@ void MainView::GrabScreen()
 
 	//on doit convertir le bitmap lu en RGB_32 pour que nos effets fonctionnent...
 	BRect B = AnyImageFormat->Bounds();
-	OriginalBitmap = new BBitmap(B, B_RGB32, true);
+	OriginalBitmap = new BBitmap(B, B_RGBA32, true);
 	offscreenView = new BView(B, "", B_FOLLOW_NONE, (uint32)NULL);
 	OriginalBitmap->AddChild(offscreenView);
 	OriginalBitmap->Lock(); 
@@ -786,8 +846,14 @@ void MainView::GrabScreen()
 	offscreenView->Sync(); 
 	OriginalBitmap->Unlock();
 	OriginalBitmap->RemoveChild(offscreenView);		
-
 	delete AnyImageFormat;
+	// fill alpha channel
+	uint8* pixel = (uint8*)OriginalBitmap->Bits();
+	uint32 count = OriginalBitmap->BitsLength();
+	for (uint32 i = 0; i < count; i += 4) {
+		pixel[i + 3] = 255;
+	}
+
 	FirstBitmap = new BBitmap(OriginalBitmap);
 	Ratio = OriginalBitmap->Bounds().right / OriginalBitmap->Bounds().bottom;
 
@@ -808,7 +874,7 @@ void MainView::GrabScreen()
 void MainView::BlackAndWhite() 
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -824,7 +890,8 @@ void MainView::BlackAndWhite()
 			moy = (int)((CurrentColor.red + CurrentColor.green + CurrentColor.blue)/3);
 			((rgb_color *)Darker->Bits())[row*widthSize + col].red = moy; 
 			((rgb_color *)Darker->Bits())[row*widthSize + col].green = moy; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = moy; 
+			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = moy;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].alpha = CurrentColor.alpha; 
 		}			
 
 	AddBitmap(OriginalBitmap);
@@ -835,7 +902,7 @@ void MainView::BlackAndWhite()
 void MainView::SmoothScale() 
 {	/*Si on fait ca, le original bitmap est resize et on peut plus 
 	revenir en arriere pour la size sans Reseter...*/
-	int x, y, z, cRed, cGreen, cBlue;
+	int x, y, z, cRed, cGreen, cBlue, cAlpha;
 	int ox=0; int oy=0; int ow=0; int oh=0;
 	if(OriginalBitmap == NULL) return;
 	int OwidthSize = (int)(OriginalBitmap->BytesPerRow()/4);
@@ -851,14 +918,14 @@ void MainView::SmoothScale()
 	if((ow < w) || (oh < h))
 		return; //smooth scaling marche seulement en shrinking.
 
-	BBitmap* Smooth = new BBitmap(BRect(0,0, w-1, h-1), B_RGB32, true);
+	BBitmap* Smooth = new BBitmap(BRect(0,0, w-1, h-1), B_RGBA32, true);
 	int widthSize = (int)(Smooth->BytesPerRow()/4);
 
 	Window()->SetTitle("Working...");
 	for(y=0; y < h; y++)
 		for(x=0; x < w; x++)
 		{//pour chaque pixel
-			z=0; cRed=0; cGreen=0; cBlue=0;
+			z=0; cRed=0; cGreen=0; cBlue=0; cAlpha = 0;
 			for(oy = (y*oh)/h; oy < ((y+1)*oh)/h; oy++)
 				for(ox = (x*ow)/w; ox < ((x+1)*ow)/w; ox++)
 				{
@@ -871,7 +938,7 @@ void MainView::SmoothScale()
 			((rgb_color *)Smooth->Bits())[y*widthSize + x].red = cRed/z;
 			((rgb_color *)Smooth->Bits())[y*widthSize + x].green = cGreen/z;
 			((rgb_color *)Smooth->Bits())[y*widthSize + x].blue = cBlue/z;
-			((rgb_color *)Smooth->Bits())[y*widthSize + x].alpha = 255;
+			((rgb_color *)Smooth->Bits())[y*widthSize + x].alpha = cAlpha/z;
 		}
 
 	AddBitmap(OriginalBitmap);
@@ -884,7 +951,7 @@ void MainView::SmoothScale()
 void MainView::SmoothScale(BBitmap* origin, BBitmap* destination)
 {	/*Si on fait ca, le original bitmap est resize et on peut plus
 	revenir en arriere pour la size sans Reseter...*/
-	int x, y, z, cRed, cGreen, cBlue;
+	int x, y, z, cRed, cGreen, cBlue, cAlpha;
 	int ox=0; int oy=0; int ow=0; int oh=0;
 	if(origin == NULL) return;
 	int OwidthSize = (int)(origin->BytesPerRow()/4);
@@ -901,19 +968,20 @@ void MainView::SmoothScale(BBitmap* origin, BBitmap* destination)
 	for(y=0; y < h; y++)
 		for(x=0; x < w; x++)
 		{//pour chaque pixel
-			z=0; cRed=0; cGreen=0; cBlue=0;
+			z=0; cRed=0; cGreen=0; cBlue=0; cAlpha = 0;
 			for(oy = (y*oh)/h; oy < ((y+1)*oh)/h; oy++)
 				for(ox = (x*ow)/w; ox < ((x+1)*ow)/w; ox++)
 				{
 					cRed += ((rgb_color *)origin->Bits())[oy*OwidthSize + ox].red;
 					cGreen += ((rgb_color *)origin->Bits())[oy*OwidthSize + ox].green;
 					cBlue += ((rgb_color *)origin->Bits())[oy*OwidthSize + ox].blue;
+					cAlpha += ((rgb_color *)origin->Bits())[oy*OwidthSize + ox].alpha;
 					z++; //prochain pixel
 				}
 			((rgb_color *)destination->Bits())[y*widthSize + x].red = cRed/z;
 			((rgb_color *)destination->Bits())[y*widthSize + x].green = cGreen/z;
 			((rgb_color *)destination->Bits())[y*widthSize + x].blue = cBlue/z;
-			((rgb_color *)destination->Bits())[y*widthSize + x].alpha = 255;
+			((rgb_color *)destination->Bits())[y*widthSize + x].alpha = cAlpha/z;
 		}
 }
 //-------------------------------------------------------------------
@@ -922,14 +990,14 @@ void MainView::SmoothScale(BBitmap* origin, BBitmap* destination)
 void MainView::Melt()
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Smoothed = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Smoothed = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
 	rgb_color RatioMajor, RatioMinor, RatioFinal;
-	RatioFinal.alpha = 255;
+	//RatioFinal.alpha = 255;
 
 	Window()->SetTitle("Working...");
 	//premiere rangee, non modifiee
@@ -945,6 +1013,8 @@ void MainView::Melt()
 			RatioFinal.red = (int)((RatioMajor.red * 0.70) + (RatioMinor.red * 0.30));
 			RatioFinal.green = (int)((RatioMajor.green * 0.70) + (RatioMinor.green * 0.30));
 			RatioFinal.blue = (int)((RatioMajor.blue * 0.70) + (RatioMinor.blue * 0.30));
+			RatioFinal.alpha = (int)((RatioMajor.alpha * 0.70) + (RatioMinor.alpha * 0.30));
+			RatioFinal.alpha = RatioMajor.alpha;
 			((rgb_color *)Smoothed->Bits())[row*widthSize + col] = RatioFinal; 
 		}			
 
@@ -956,7 +1026,7 @@ void MainView::Melt()
 void MainView::Invert() 
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -972,6 +1042,7 @@ void MainView::Invert()
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = 255 - invertedColor.red; 
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = 255 - invertedColor.green; 
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = 255 - invertedColor.blue; 
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].alpha = invertedColor.alpha;
 		}			
 
 	AddBitmap(OriginalBitmap);
@@ -982,7 +1053,7 @@ void MainView::Invert()
 void MainView::Drunk()
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Barney = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Barney = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -1009,6 +1080,7 @@ void MainView::Drunk()
 			((rgb_color *)Barney->Bits())[row*widthSize + col].red = (int)((PC.red + NC.red)/2);
 			((rgb_color *)Barney->Bits())[row*widthSize + col].green = (int)((PC.green + NC.green)/2);
 			((rgb_color *)Barney->Bits())[row*widthSize + col].blue = (int)((PC.blue + NC.blue)/2);
+			((rgb_color *)Barney->Bits())[row*widthSize + col].alpha = (int)((PC.alpha + NC.alpha)/2);
 		}			
 
 	AddBitmap(OriginalBitmap);
@@ -1019,7 +1091,7 @@ void MainView::Drunk()
 void MainView::InverseRG() 
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -1034,6 +1106,7 @@ void MainView::InverseRG()
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.green; 
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.red; 
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.blue; 
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].alpha = invertedColor.alpha;
 		}			
 
 	AddBitmap(OriginalBitmap);
@@ -1044,7 +1117,7 @@ void MainView::InverseRG()
 void MainView::InverseRB() 
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -1058,7 +1131,8 @@ void MainView::InverseRB()
 			invertedColor = ((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.blue; 
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.red; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.green; 
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.green;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].alpha = invertedColor.alpha;
 		}			
 
 	AddBitmap(OriginalBitmap);
@@ -1069,7 +1143,7 @@ void MainView::InverseRB()
 void MainView::InverseGB() 
 {
 	if(OriginalBitmap == NULL) return;
-	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
+	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGBA32, true);
 
 	int width = (int)OriginalBitmap->Bounds().right+1;
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
@@ -1083,11 +1157,41 @@ void MainView::InverseGB()
 			invertedColor = ((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.blue; 
 			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.green; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.red; 
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.red;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].alpha = invertedColor.alpha;
 		}			
 	
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Inverted;
+	Invalidate();
+}
+//-------------------------------------------------------------------
+void MainView::AddDesktopBackground()
+{
+	if(OriginalBitmap == NULL) return;
+	BBitmap* DesktopBackground = new BBitmap(OriginalBitmap, B_RGBA32, true);
+
+	int width = (int)DesktopBackground->Bounds().right+1;
+	int height = (int)DesktopBackground->Bounds().bottom+1;
+	int widthSize = (int)(DesktopBackground->BytesPerRow()/4);
+
+	Window()->SetTitle("Working...");
+	rgb_color desktopColor =  BScreen(Window()).DesktopColor();
+
+	uint8* pixel = (uint8*)DesktopBackground->Bits();
+	uint32 numPixels = DesktopBackground->BitsLength() / 4;
+
+	for (uint32 i = 0; i < numPixels; i++) {
+		if (pixel[3] < 255) {
+			uint8 alpha = 255 - pixel[3];
+			blend_colors(pixel, desktopColor.red, desktopColor.green, desktopColor.blue, alpha);
+			pixel[3] = 255;
+		}
+		pixel += 4;
+	}
+
+	AddBitmap(OriginalBitmap);
+	OriginalBitmap = DesktopBackground;
 	Invalidate();
 }
 //-------------------------------------------------------------------
