@@ -1,0 +1,40 @@
+1	Norwegian	application/x-vnd.TAResizer	3642493989
+Size	MouseView		Størrelse
+Darkness	OptionView		Mørk
+The Awesome Resizer	MainWindow		The Awesome Resizer
+Flip Left-Right	OptionView		Vend Venstre-Høyre
+Reset	OptionView		Tilbakestill
+90 Rotation	OptionView		90 Rotering
+Undo	OptionView		Angre
+About	OptionView		Om
+Light	OptionView		Lys
+Width	OptionView		Bredde
+Height	OptionView		Høyde
+Smooth scaling	OptionView		Myk skalering
+Blur	OptionView		Uskarp
+Screenshot	OptionView		Skjermbilde
+Preserve aspect ratio	OptionView		Behold størrelsesforhold
+Choose	OptionView		Velg
+Drunk	OptionView		Full
+Swap Green-Blue	OptionView		Bytt Grønn-Blå
+Apply	OptionView		Bruk
+Swap Red-Blue	OptionView		Bytt Rød-Blå
+Coordinates window	OptionView		Koordinatvindu
+Invert	OptionView		Inverter
+TAResizer	OptionWindow		TAResizer
+Size:	OptionView		Størrelse:
+A simple application that allows quick dynamic resizing of any translator supported image and much much more.	OptionWindow		Et enkelt program som lar deg raskt og dynamisk endre størrelsen på støttede bildeformater, og mye mye mer.
+Load	OptionView		Last
+Drag and drop an image	MainView		Dra og slipp et bilde
+Coord	MouseView		Koord
+Filename:	OptionView		Filnavn:
+Save	OptionView		Lagre
+Format:	OptionView		Format:
+Swap Red-Green	OptionView		Bytt Rød-Grønn
+Options	OptionWindow		Innstillinger
+Choose an action	OptionView		Velg en effekt
+Working…	MainView		Jobber…
+Out of Range	MouseView		Ute av rekvidde
+Flip Top-Bottom	OptionView		Vend Topp-Bunn
+Melt	OptionView		Smelt
+Black & White	OptionView		Svart & Hvit
