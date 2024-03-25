@@ -1,7 +1,6 @@
-1	Norwegian	application/x-vnd.TAResizer	3642493989
+1	Norwegian	application/x-vnd.TAResizer	2403903214
 Size	MouseView		Størrelse
 Darkness	OptionView		Mørk
-The Awesome Resizer	MainWindow		The Awesome Resizer
 Flip Left-Right	OptionView		Vend Venstre-Høyre
 Reset	OptionView		Tilbakestill
 90 Rotation	OptionView		90 Rotering
@@ -9,6 +8,7 @@ Undo	OptionView		Angre
 About	OptionView		Om
 Light	OptionView		Lys
 Width	OptionView		Bredde
+The Awesome Resizer	System name		The Awesome Resizer
 Height	OptionView		Høyde
 Smooth scaling	OptionView		Myk skalering
 Blur	OptionView		Uskarp
