@@ -4,30 +4,35 @@
 #include <LayoutBuilder.h>
 #include <TranslatorFormats.h>
 #include "main.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "OptionView"
+
 //----------------------------------------------------------------------
-OptionView::OptionView() 
+OptionView::OptionView()
 	: BView("optionView", B_WILL_DRAW)
 {
 	SavedW = 640; SavedH = 480; CurrentEffect = -1;
-	
-	Largeur = new BTextControl("Width", B_EMPTY_STRING, "", NULL);
-	Largeur->SetModificationMessage(new BMessage(MOD_WIDTH)); 
 
-	Hauteur = new BTextControl("Height", B_EMPTY_STRING, "", NULL);
-	Hauteur->SetModificationMessage(new BMessage(MOD_HEIGHT)); 
+	Largeur = new BTextControl(B_TRANSLATE("Width"), B_EMPTY_STRING, "", NULL);
+	Largeur->SetModificationMessage(new BMessage(MOD_WIDTH));
 
-	SaveW = new BButton("SaveW", "Save", new BMessage(SAVEW));
-	LoadW = new BButton("LoadW", "Load", new BMessage(LOADW));
-	SaveH = new BButton("SaveH", "Save", new BMessage(SAVEH));
-	LoadH = new BButton("LoadH", "Load", new BMessage(LOADH));
+	Hauteur = new BTextControl(B_TRANSLATE("Height"), B_EMPTY_STRING, "", NULL);
+	Hauteur->SetModificationMessage(new BMessage(MOD_HEIGHT));
 
-	CheckBox = new BCheckBox("Ratio", "Preserve aspect ratio", new BMessage(RATIO));
+	SaveW = new BButton("SaveW", B_TRANSLATE("Save"), new BMessage(SAVEW));
+	LoadW = new BButton("LoadW", B_TRANSLATE("Load"), new BMessage(LOADW));
+	SaveH = new BButton("SaveH", B_TRANSLATE("Save"), new BMessage(SAVEH));
+	LoadH = new BButton("LoadH", B_TRANSLATE("Load"), new BMessage(LOADH));
+
+	CheckBox = new BCheckBox("Ratio", B_TRANSLATE("Preserve aspect ratio"), new BMessage(RATIO));
 	CheckBox->SetValue(B_CONTROL_ON);
 
-	FileName = new BTextControl("Filename","Filename:", "", NULL);
+	FileName = new BTextControl("Filename",B_TRANSLATE("Filename:"), "", NULL);
 
 	//Popup qui affiche tous les translators disponibles
-	Popup = new BPopUpMenu("Choose");
+	Popup = new BPopUpMenu(B_TRANSLATE("Choose"));
 
  	//on barre l'autre fenetre le temps de faire ca
  	((Resizer*)be_app)->Fenetre->Lock();
@@ -35,19 +40,19 @@ OptionView::OptionView()
 	((Resizer*)be_app)->Fenetre->Unlock();
 
 	//le menu qui affiche le popup de type de fichier
-	DropDownMenu = new BMenuField("DropTranslator", "Format:", Popup);
+	DropDownMenu = new BMenuField("DropTranslator", B_TRANSLATE("Format:"), Popup);
 
 	//Bouton pour reinitialiser l'image
-	Reset = new BButton("Reset", "Reset", new BMessage(RESET));
+	Reset = new BButton("Reset", B_TRANSLATE("Reset"), new BMessage(RESET));
 
 	//Bouton pour undo
-	Undo = new BButton("Undo", "Undo", new BMessage(UNDO));
+	Undo = new BButton("Undo", B_TRANSLATE("Undo"), new BMessage(UNDO));
 
-	//Bouton pour smooth scaller l'image 
-	Smooth = new BCheckBox("Smooth", "Smooth scaling", new BMessage(SMOOTH));
+	//Bouton pour smooth scaller l'image
+	Smooth = new BCheckBox("Smooth", B_TRANSLATE("Smooth scaling"), new BMessage(SMOOTH));
 	//Smooth->SetValue(B_CONTROL_ON);
 	//Tout les effets possibles...
-	PopupEffect = new BPopUpMenu("Choose an action");
+	PopupEffect = new BPopUpMenu(B_TRANSLATE("Choose an action"));
 	FillPopupEffect();
 
 	//le menu qui affiche le popup effect
@@ -57,18 +62,18 @@ OptionView::OptionView()
 	Grip = new BCheckBox("Grip", "Show grip", new BMessage(GRIP));
 
 	//Bouton Apply
-	Apply = new BButton("Apply", "Apply", new BMessage(APPLY));
+	Apply = new BButton("Apply", B_TRANSLATE("Apply"), new BMessage(APPLY));
 
 	//Bouton Coord
-	Coord = new BCheckBox("Coord", "Coordinates window", new BMessage(COORD));
+	Coord = new BCheckBox("Coord", B_TRANSLATE("Coordinates window"), new BMessage(COORD));
 
 	//Bouton About
-	Web = new BButton("About", "About", new BMessage(B_ABOUT_REQUESTED));
+	Web = new BButton("About", B_TRANSLATE("About"), new BMessage(B_ABOUT_REQUESTED));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
 		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
 		.AddGroup(B_HORIZONTAL, B_USE_ITEM_SPACING)
-			.Add(new BStringView("Size", "Size:"))
+			.Add(new BStringView("Size", B_TRANSLATE("Size:")))
 			.Add(Largeur)
 			.Add(new BStringView("separator", "x"))
 			.Add(Hauteur)
@@ -115,7 +120,7 @@ void OptionView::FillPopup()
 		{//pour chaque translator...
 			const translation_format* FormatIn;
 			int32 FormatInCount;
-			if(BTranslatorRoster::Default()->GetInputFormats(((Resizer*)be_app)->Fenetre->Main->all_translators[i], &FormatIn, &FormatInCount) >= B_OK) 
+			if(BTranslatorRoster::Default()->GetInputFormats(((Resizer*)be_app)->Fenetre->Main->all_translators[i], &FormatIn, &FormatInCount) >= B_OK)
 			{//pas de probleme a recuperer tous les inputs formats
 				for(int j=0; j<FormatInCount; j++) //pour chaque format en input
 				{
@@ -176,59 +181,59 @@ void OptionView::FillPopupEffect()
 {
 	BMessage* Rotation = new BMessage(CHANGE_EFFECT);
 	Rotation->AddInt16("Effect", ROTATE);
-	PopupEffect->AddItem(new BMenuItem("90 Rotation", Rotation));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("90 Rotation"), Rotation));
 
 	BMessage* FlipH = new BMessage(CHANGE_EFFECT);
 	FlipH->AddInt16("Effect", FLIPH);
-	PopupEffect->AddItem(new BMenuItem("Flip Top-Bottom", FlipH));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Flip Top-Bottom"), FlipH));
 
 	BMessage* FlipV = new BMessage(CHANGE_EFFECT);
 	FlipV->AddInt16("Effect", FLIPV);
-	PopupEffect->AddItem(new BMenuItem("Flip Left-Right", FlipV));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Flip Left-Right"), FlipV));
 
 	BMessage* Light = new BMessage(CHANGE_EFFECT);
 	Light->AddInt16("Effect", LIGHT);
-	PopupEffect->AddItem(new BMenuItem("Light", Light));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Light"), Light));
 
 	BMessage* Dark = new BMessage(CHANGE_EFFECT);
 	Dark->AddInt16("Effect", DARK);
-	PopupEffect->AddItem(new BMenuItem("Darkness", Dark));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Darkness"), Dark));
 
 	BMessage* Blur = new BMessage(CHANGE_EFFECT);
 	Blur->AddInt16("Effect", BLUR);
-	PopupEffect->AddItem(new BMenuItem("Blur", Blur));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Blur"), Blur));
 
 	BMessage* Melt = new BMessage(CHANGE_EFFECT);
 	Melt->AddInt16("Effect", MELT);
-	PopupEffect->AddItem(new BMenuItem("Melt", Melt));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Melt"), Melt));
 
 	BMessage* Drunk = new BMessage(CHANGE_EFFECT);
 	Drunk->AddInt16("Effect", DRUNK);
-	PopupEffect->AddItem(new BMenuItem("Drunk", Drunk));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Drunk"), Drunk));
 
 	BMessage* Baw = new BMessage(CHANGE_EFFECT);
 	Baw->AddInt16("Effect", BAW);
-	PopupEffect->AddItem(new BMenuItem("Black & White", Baw));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Black & White"), Baw));
 
 	BMessage* Invert = new BMessage(CHANGE_EFFECT);
 	Invert->AddInt16("Effect", INVERT);
-	PopupEffect->AddItem(new BMenuItem("Invert", Invert));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Invert"), Invert));
 
 	BMessage* Srg = new BMessage(CHANGE_EFFECT);
 	Srg->AddInt16("Effect", SRG);
-	PopupEffect->AddItem(new BMenuItem("Swap Red-Green", Srg));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap Red-Green"), Srg));
 
 	BMessage* Srb = new BMessage(CHANGE_EFFECT);
 	Srb->AddInt16("Effect", SRB);
-	PopupEffect->AddItem(new BMenuItem("Swap Red-Blue", Srb));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap Red-Blue"), Srb));
 
 	BMessage* Sgb = new BMessage(CHANGE_EFFECT);
 	Sgb->AddInt16("Effect", SGB);
-	PopupEffect->AddItem(new BMenuItem("Swap Green-Blue", Sgb));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap Green-Blue"), Sgb));
 
 	BMessage* Screenshot = new BMessage(CHANGE_EFFECT);
 	Screenshot->AddInt16("Effect", SCREENSHOT);
-	PopupEffect->AddItem(new BMenuItem("Screenshot", Screenshot));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Screenshot"), Screenshot));
 }
 //----------------------------------------------------------------------
 void OptionView::ApplyEffect()

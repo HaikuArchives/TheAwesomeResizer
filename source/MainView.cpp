@@ -1,3 +1,4 @@
+#include <Catalog.h>
 #include "MainView.h"
 #include <Path.h>
 #include <TranslationUtils.h>
@@ -11,11 +12,15 @@
 #include <Application.h>
 #include "main.h"
 #include <stdlib.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "MainView"
+
 //--------------------------------------------------------------------
 #define min(a,b) ((a)>(b)?(b):(a))
 #define max(a,b) ((a)>(b)?(a):(b))
 //--------------------------------------------------------------------
-MainView::MainView() 
+MainView::MainView()
 	: BView(BRect(0, 0, 200, 100), "Image", B_FOLLOW_NONE, B_WILL_DRAW)
 {
 	SetViewColor(128, 128, 128);
@@ -38,7 +43,7 @@ MainView::MainView()
 //----------------------------------------------------------------------
 MainView::~MainView()
 {
-	if(OriginalBitmap != NULL) 
+	if(OriginalBitmap != NULL)
 	{
 		delete OriginalBitmap;
 		delete FirstBitmap;
@@ -53,7 +58,7 @@ BRect MainView::GetRegion()
 //----------------------------------------------------------------------
 bool MainView::GetImage(const char* path)
 {
-	if(OriginalBitmap != NULL) 
+	if(OriginalBitmap != NULL)
 	{
 		delete OriginalBitmap;
 		delete FirstBitmap;
@@ -67,11 +72,11 @@ bool MainView::GetImage(const char* path)
 	OriginalBitmap = new BBitmap(B, B_RGB32, true);
 	offscreenView = new BView(B, "", B_FOLLOW_NONE, (uint32)NULL);
 	OriginalBitmap->AddChild(offscreenView);
-	OriginalBitmap->Lock(); 
+	OriginalBitmap->Lock();
 	offscreenView->DrawBitmap(AnyImageFormat, B);
-	offscreenView->Sync(); 
+	offscreenView->Sync();
 	OriginalBitmap->Unlock();
-	OriginalBitmap->RemoveChild(offscreenView);		
+	OriginalBitmap->RemoveChild(offscreenView);
 	delete AnyImageFormat;
 
 	FirstBitmap = new BBitmap(OriginalBitmap);
@@ -90,7 +95,7 @@ void MainView::ResizeImage()
 	//On anule le clipping region si il y en a une
 	Clipping1 = BPoint(-1,-1);
 	Clipping2 = BPoint(-1,-1);
-	
+
 	if(OriginalBitmap == NULL) //pas d'image
 	{//la fenetre est resize, on agrandit la view pour prendre tout l'espace dispo.
 		BRect W = Window()->Bounds();
@@ -120,15 +125,15 @@ void MainView::ResizeImage()
 			Window()->ResizeTo(Fenetre.bottom * Ratio, Fenetre.bottom);
 		}
 		Invalidate();
-	}	
-	
+	}
+
 	else
 	{
 		BRect W = Window()->Bounds();
 		ResizeTo(W.right, W.bottom);
 		Invalidate();
 	}
- 
+
 	if(((Resizer*)be_app)->Fenetre->DontUpdate)
 	{//le resize a ete cause par une entree manuelle dans la fenetre option, on reponds pas
 		((Resizer*)be_app)->Fenetre->DontUpdate = false;
@@ -173,7 +178,7 @@ void MainView::ResizeImage(int width, int height)
 		else if(height == -1)
 		{
 			W = width-1;
-			H = (int)(W / Ratio);		
+			H = (int)(W / Ratio);
 
 			BMessage* message2 = new BMessage(TEXT_HEIGHT);
 			message2->AddInt16("NewHeight", H+1);
@@ -184,8 +189,8 @@ void MainView::ResizeImage(int width, int height)
 		ResizeTo(W, H); //ajustement de l'image
 		Window()->ResizeTo(W, H); //on fait fitter l'image autour
 		Invalidate();
-	}	
-	
+	}
+
 	else
 	{//on garde pas le ratio, on fait juste foutre la nouvelle valeur dedans
 		int W = 0;
@@ -200,7 +205,7 @@ void MainView::ResizeImage(int width, int height)
 		else if(height == -1)
 		{
 			W = width-1;
-			H = (int)Bounds().bottom;		
+			H = (int)Bounds().bottom;
 		}
 
 		DontResize = true; //pas resizer la view en resizant la fenetre
@@ -217,7 +222,7 @@ void MainView::Draw(BRect R)
 	{//on fait un petit fill bon chic bon genre
 		BRect bounds = B;
 		const pattern stripePattern = {0xcc, 0x66, 0x33, 0x99, 0xcc, 0x66, 0x33, 0x99};
-		const char *stringMessage = "Drag and drop an image";
+		const char *stringMessage = B_TRANSLATE("Drag and drop an image");
 
 		font_height fontHeight;
 		GetFontHeight(&fontHeight);
@@ -281,7 +286,7 @@ void MainView::Draw(BRect R)
 	offscreenView->Sync(); //Synchronise la vue offscreen
 	DrawBitmap(offscreenBitmap); //Copie le bitmap a l'ecran
 	offscreenBitmap->Unlock(); //delock le bitmap offscreen
-	offscreenBitmap->RemoveChild(offscreenView);		
+	offscreenBitmap->RemoveChild(offscreenView);
 
 	if(Clipping1 != BPoint(-1,-1) && Clipping2 != BPoint(-1,-1))
 	{
@@ -298,7 +303,7 @@ void MainView::MessageReceived(BMessage *message)
 {
    	entry_ref ref;
 	BPath path;
-		
+
  	switch (message->what)
  	{
    		case B_SIMPLE_DATA:
@@ -313,7 +318,7 @@ void MainView::MessageReceived(BMessage *message)
 				((Resizer*)be_app)->Option->Unlock();
 				GetImage(path.Path());
 			}
-   		
+
    			else BView::MessageReceived(message);break;
    		}
    		default:BView::MessageReceived(message);break;
@@ -339,7 +344,7 @@ void MainView::ResetImage()
 	Invalidate();
 }
 //--------------------------------------------------------------------------------
-void MainView::MouseDown(BPoint where) 
+void MainView::MouseDown(BPoint where)
 {//on clique qq sur l'image
 	int32 buttons;
 	Window()->CurrentMessage()->FindInt32("buttons", &buttons);
@@ -376,7 +381,7 @@ void MainView::MouseDown(BPoint where)
 		GetMouse(&P, &mod);
 		if(!mod) //aucun bouton enfonce
 		{Window()->Activate(true); return;}
-		
+
 		if(P != where) break; //on commence a bouger
 		snooze(40000); //on attends un peu
 	}
@@ -402,7 +407,7 @@ void MainView::MouseDown(BPoint where)
 void MainView::MouseUp(BPoint where)
 {
 	if(dragging) //on est en train de sizer une region
-	{	
+	{
 		dragging = false;
 		BPoint P;
 		uint32 mod;
@@ -440,7 +445,7 @@ void MainView::Copy(BMessage * request)
 	{//on copie le clipping
 		BRect Source = GetRegion();
 		BRect Destination = BRect(0,0,Source.right-Source.left, Source.bottom-Source.top);
-		
+
 		//Image temporaire que l'on size correctement
 		BBitmap* temp = new BBitmap(Bounds(), B_RGB32, true);
 		BView* OffView = new BView(Bounds(), "", B_FOLLOW_NONE, (uint32)NULL);
@@ -449,7 +454,7 @@ void MainView::Copy(BMessage * request)
 		OffView->DrawBitmap(offscreenBitmap, Bounds());
 		OffView->Sync();
 		temp->Unlock();
-		temp->RemoveChild(OffView);		
+		temp->RemoveChild(OffView);
 		delete OffView;
 
 		//applique le clipping sur cette image resizee
@@ -460,11 +465,11 @@ void MainView::Copy(BMessage * request)
 		OffView->DrawBitmap(temp, Source, Destination);
 		OffView->Sync();
 		ModifiedBitmap->Unlock();
-		ModifiedBitmap->RemoveChild(OffView);		
+		ModifiedBitmap->RemoveChild(OffView);
 		delete OffView;
 		delete temp;
 	}
-	
+
 	else
 	{//on copie l'image au complet
 		ModifiedBitmap = new BBitmap(Bounds(), B_RGB32, true);
@@ -474,7 +479,7 @@ void MainView::Copy(BMessage * request)
 		OffView->DrawBitmap(offscreenBitmap, Bounds());
 		OffView->Sync();
 		ModifiedBitmap->Unlock();
-		ModifiedBitmap->RemoveChild(OffView);		
+		ModifiedBitmap->RemoveChild(OffView);
 		delete OffView;
 	}
 
@@ -490,8 +495,8 @@ void MainView::Copy(BMessage * request)
 		{
 			const char * name;
 			entry_ref dir;
-			if(!request->FindString("be:filetypes", &type) && !request->FindString("name", &name) 
-			&& !request->FindRef("directory", &dir)) 
+			if(!request->FindString("be:filetypes", &type) && !request->FindString("name", &name)
+			&& !request->FindRef("directory", &dir))
 			{//	write file
 				BDirectory d(&dir);
 				BFile f(&d, name, O_RDWR | O_TRUNC);
@@ -502,7 +507,7 @@ void MainView::Copy(BMessage * request)
 			}
 		}
 
-		else 
+		else
 		{//bonne question a savoir si ca marche...
 			BMessage msg(B_MIME_DATA);
 			BMallocIO f;
@@ -574,16 +579,16 @@ void MainView::RotateImage()
 	for(int row = 0; row < heightO; row++)
 		for(int col = 0; col < widthO; col++)
 		{
-			((rgb_color *)Spin->Bits())[(col*widthD + row)] = 
+			((rgb_color *)Spin->Bits())[(col*widthD + row)] =
 			((rgb_color *)OriginalBitmap->Bits())[row*widthO + widthO - col];
-		}			
+		}
 
 	BRect temp = OriginalBitmap->Bounds();
 	delete OriginalBitmap;
 	OriginalBitmap = Spin;
 	Ratio = OriginalBitmap->Bounds().right / OriginalBitmap->Bounds().bottom;
-	ResizeImage(temp.bottom+1, -1); 
-	ResizeImage(-1, temp.right+1); 
+	ResizeImage(temp.bottom+1, -1);
+	ResizeImage(-1, temp.right+1);
 	Flush();
 }
 //-------------------------------------------------------------------
@@ -602,24 +607,24 @@ void MainView::Flip(bool horizontal)
 		for(int row = 0; row < height; row++)
 			for(int col = 0; col < width; col++)
 			{
-				((rgb_color *)Flip->Bits())[((height-1-row)*widthSize + col)] = 
+				((rgb_color *)Flip->Bits())[((height-1-row)*widthSize + col)] =
 				((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
-			}			
+			}
 
 	else //vertical
 		for(int row = 0; row < height; row++)
 			for(int col = 0; col < width; col++)
 			{
-				((rgb_color *)Flip->Bits())[(row*widthSize + width-1-col)] = 
+				((rgb_color *)Flip->Bits())[(row*widthSize + width-1-col)] =
 				((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
-			}			
-	
+			}
+
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Flip;
 	Invalidate();
 }
 //-------------------------------------------------------------------
-void MainView::Dark() 
+void MainView::Dark()
 {
 	if(OriginalBitmap == NULL) return;
 	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
@@ -630,7 +635,7 @@ void MainView::Dark()
 
 	rgb_color CurrentColor;
 	int r, g, b;
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
@@ -641,17 +646,17 @@ void MainView::Dark()
 			if(r < 0) r=0;
 			if(g < 0) g=0;
 			if(b < 0) b=0;
-			((rgb_color *)Darker->Bits())[row*widthSize + col].red = r; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].green = g; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = b; 
-		}			
-	
+			((rgb_color *)Darker->Bits())[row*widthSize + col].red = r;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].green = g;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = b;
+		}
+
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Darker;
 	Invalidate();
 }
 //-------------------------------------------------------------------
-void MainView::Light() 
+void MainView::Light()
 {
 	if(OriginalBitmap == NULL) return;
 	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
@@ -662,7 +667,7 @@ void MainView::Light()
 
 	rgb_color CurrentColor;
 	int r, g, b;
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
@@ -673,10 +678,10 @@ void MainView::Light()
 			if(r > 255) r=255;
 			if(g > 255) g=255;
 			if(b > 255) b=255;
-			((rgb_color *)Darker->Bits())[row*widthSize + col].red = r; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].green = g; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = b; 
-		}			
+			((rgb_color *)Darker->Bits())[row*widthSize + col].red = r;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].green = g;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = b;
+		}
 
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Darker;
@@ -692,8 +697,8 @@ void MainView::Blur()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle("Working...");
-	
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+
 	rgb_color CC; //current color
 	rgb_color T; //top color
 	rgb_color L; //left color
@@ -721,19 +726,19 @@ void MainView::Blur()
 
 			if(col < width - 1)	{R = ((rgb_color *)OriginalBitmap->Bits())[(row)*widthSize + col+1]; contour++;}
 			else R = empty;
-			
+
 			if(row < height - 1) {D = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col]; contour++;}
 			else D = empty;
-			
+
 			if(row > 0 && col > 0) {TL = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col-1]; contour++;}
 			else TL = empty;
-			
+
 			if(row > 0 && col < width - 1) {TR = ((rgb_color *)OriginalBitmap->Bits())[(row-1)*widthSize + col+1]; contour++;}
 			else TR = empty;
 
 			if(row < height - 1 && col > 0) {BL = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col-1]; contour++;}
 			else BL = empty;
-			
+
 			if(row < height - 1 && col < width - 1) {BR = ((rgb_color *)OriginalBitmap->Bits())[(row+1)*widthSize + col+1]; contour++;}
 			else BR = empty;
 
@@ -762,7 +767,7 @@ void MainView::GrabScreen()
 	((Resizer*)be_app)->Option->Unlock();
 	Window()->Hide();
 
-	if(OriginalBitmap != NULL) 
+	if(OriginalBitmap != NULL)
 	{
 		delete OriginalBitmap;
 		delete FirstBitmap;
@@ -781,11 +786,11 @@ void MainView::GrabScreen()
 	OriginalBitmap = new BBitmap(B, B_RGB32, true);
 	offscreenView = new BView(B, "", B_FOLLOW_NONE, (uint32)NULL);
 	OriginalBitmap->AddChild(offscreenView);
-	OriginalBitmap->Lock(); 
+	OriginalBitmap->Lock();
 	offscreenView->DrawBitmap(AnyImageFormat, B);
-	offscreenView->Sync(); 
+	offscreenView->Sync();
 	OriginalBitmap->Unlock();
-	OriginalBitmap->RemoveChild(offscreenView);		
+	OriginalBitmap->RemoveChild(offscreenView);
 
 	delete AnyImageFormat;
 	FirstBitmap = new BBitmap(OriginalBitmap);
@@ -795,8 +800,8 @@ void MainView::GrabScreen()
 	DontResize = true;
 	ResizeTo(OriginalBitmap->Bounds().right, OriginalBitmap->Bounds().bottom); //grosseur originale
 	Window()->ResizeTo(OriginalBitmap->Bounds().right, OriginalBitmap->Bounds().bottom);
-	
-	//on fait reaparaitre nos fenetres	
+
+	//on fait reaparaitre nos fenetres
 	Window()->Show();
 	((Resizer*)be_app)->Option->Lock();
 	((Resizer*)be_app)->Option->Show();
@@ -805,7 +810,7 @@ void MainView::GrabScreen()
 	Flush();
 }
 //-------------------------------------------------------------------
-void MainView::BlackAndWhite() 
+void MainView::BlackAndWhite()
 {
 	if(OriginalBitmap == NULL) return;
 	BBitmap* Darker = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
@@ -816,24 +821,24 @@ void MainView::BlackAndWhite()
 
 	rgb_color CurrentColor;
 	int moy;
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
 			CurrentColor = ((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
 			moy = (int)((CurrentColor.red + CurrentColor.green + CurrentColor.blue)/3);
-			((rgb_color *)Darker->Bits())[row*widthSize + col].red = moy; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].green = moy; 
-			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = moy; 
-		}			
+			((rgb_color *)Darker->Bits())[row*widthSize + col].red = moy;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].green = moy;
+			((rgb_color *)Darker->Bits())[row*widthSize + col].blue = moy;
+		}
 
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Darker;
 	Invalidate();
 }
 //-------------------------------------------------------------------
-void MainView::SmoothScale() 
-{	/*Si on fait ca, le original bitmap est resize et on peut plus 
+void MainView::SmoothScale()
+{	/*Si on fait ca, le original bitmap est resize et on peut plus
 	revenir en arriere pour la size sans Reseter...*/
 	int x, y, z, cRed, cGreen, cBlue;
 	int ox=0; int oy=0; int ow=0; int oh=0;
@@ -854,7 +859,7 @@ void MainView::SmoothScale()
 	BBitmap* Smooth = new BBitmap(BRect(0,0, w-1, h-1), B_RGB32, true);
 	int widthSize = (int)(Smooth->BytesPerRow()/4);
 
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(y=0; y < h; y++)
 		for(x=0; x < w; x++)
 		{//pour chaque pixel
@@ -931,10 +936,10 @@ void MainView::Melt()
 	rgb_color RatioMajor, RatioMinor, RatioFinal;
 	RatioFinal.alpha = 255;
 
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	//premiere rangee, non modifiee
 	for(int RowSpecial = 0; RowSpecial < width; RowSpecial++)
-		((rgb_color *)Smoothed->Bits())[RowSpecial] = 
+		((rgb_color *)Smoothed->Bits())[RowSpecial] =
 		((rgb_color *)OriginalBitmap->Bits())[RowSpecial];
 
 	for(int row = 1; row < height; row++)
@@ -945,15 +950,15 @@ void MainView::Melt()
 			RatioFinal.red = (int)((RatioMajor.red * 0.70) + (RatioMinor.red * 0.30));
 			RatioFinal.green = (int)((RatioMajor.green * 0.70) + (RatioMinor.green * 0.30));
 			RatioFinal.blue = (int)((RatioMajor.blue * 0.70) + (RatioMinor.blue * 0.30));
-			((rgb_color *)Smoothed->Bits())[row*widthSize + col] = RatioFinal; 
-		}			
+			((rgb_color *)Smoothed->Bits())[row*widthSize + col] = RatioFinal;
+		}
 
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Smoothed;
 	Invalidate();
 }
 //-------------------------------------------------------------------
-void MainView::Invert() 
+void MainView::Invert()
 {
 	if(OriginalBitmap == NULL) return;
 	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
@@ -964,15 +969,15 @@ void MainView::Invert()
 
 	rgb_color invertedColor;
 
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
 			invertedColor = ((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = 255 - invertedColor.red; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = 255 - invertedColor.green; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = 255 - invertedColor.blue; 
-		}			
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = 255 - invertedColor.red;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = 255 - invertedColor.green;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = 255 - invertedColor.blue;
+		}
 
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Inverted;
@@ -990,15 +995,15 @@ void MainView::Drunk()
 
 	rgb_color PC; //preceding color
 	rgb_color NC; //next color
-	
-	Window()->SetTitle("Working...");
+
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	//premiere et derniere rangees non modifiee
 	for(int RowSpecial = 0; RowSpecial < width; RowSpecial++)
-		((rgb_color *)Barney->Bits())[RowSpecial] = 
+		((rgb_color *)Barney->Bits())[RowSpecial] =
 		((rgb_color *)OriginalBitmap->Bits())[RowSpecial];
 
 	for(int RowSpecial = 0; RowSpecial < width; RowSpecial++)
-		((rgb_color *)Barney->Bits())[(height-1)*widthSize + RowSpecial] = 
+		((rgb_color *)Barney->Bits())[(height-1)*widthSize + RowSpecial] =
 		((rgb_color *)OriginalBitmap->Bits())[(height-1)*widthSize + RowSpecial];
 
 	for(int row = 1; row < height-1; row++)
@@ -1009,14 +1014,14 @@ void MainView::Drunk()
 			((rgb_color *)Barney->Bits())[row*widthSize + col].red = (int)((PC.red + NC.red)/2);
 			((rgb_color *)Barney->Bits())[row*widthSize + col].green = (int)((PC.green + NC.green)/2);
 			((rgb_color *)Barney->Bits())[row*widthSize + col].blue = (int)((PC.blue + NC.blue)/2);
-		}			
+		}
 
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Barney;
 	Invalidate();
 }
 //-------------------------------------------------------------------
-void MainView::InverseRG() 
+void MainView::InverseRG()
 {
 	if(OriginalBitmap == NULL) return;
 	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
@@ -1025,23 +1030,23 @@ void MainView::InverseRG()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	rgb_color invertedColor;
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
 			invertedColor = ((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.green; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.red; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.blue; 
-		}			
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.green;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.red;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.blue;
+		}
 
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Inverted;
 	Invalidate();
 }
 //-------------------------------------------------------------------
-void MainView::InverseRB() 
+void MainView::InverseRB()
 {
 	if(OriginalBitmap == NULL) return;
 	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
@@ -1050,23 +1055,23 @@ void MainView::InverseRB()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	rgb_color invertedColor;
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
 			invertedColor = ((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.blue; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.red; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.green; 
-		}			
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.blue;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.red;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.green;
+		}
 
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Inverted;
 	Invalidate();
 }
 //-------------------------------------------------------------------
-void MainView::InverseGB() 
+void MainView::InverseGB()
 {
 	if(OriginalBitmap == NULL) return;
 	BBitmap* Inverted = new BBitmap(OriginalBitmap->Bounds(), B_RGB32, true);
@@ -1075,17 +1080,17 @@ void MainView::InverseGB()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle("Working...");
+	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	rgb_color invertedColor;
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
 			invertedColor = ((rgb_color *)OriginalBitmap->Bits())[row*widthSize + col];
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.blue; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.green; 
-			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.red; 
-		}			
-	
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].green = invertedColor.blue;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].blue = invertedColor.green;
+			((rgb_color *)Inverted->Bits())[row*widthSize + col].red = invertedColor.red;
+		}
+
 	AddBitmap(OriginalBitmap);
 	OriginalBitmap = Inverted;
 	Invalidate();

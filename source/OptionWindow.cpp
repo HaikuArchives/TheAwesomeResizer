@@ -4,9 +4,14 @@
 #include <LayoutBuilder.h>
 #include "main.h"
 #include <stdlib.h>
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "OptionWindow"
+
 //-------------------------------------------------------------------
 OptionWindow::OptionWindow()
-	: BWindow(BRect(10, 30, 10, 30), "Options", B_TITLED_WINDOW,
+	: BWindow(BRect(10, 30, 10, 30), B_TRANSLATE("Options"), B_TITLED_WINDOW,
 	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	Option = new OptionView();
@@ -48,9 +53,9 @@ void OptionWindow::MessageReceived(BMessage* message)
 			((Resizer*)be_app)->Fenetre->PostMessage(message);break;
 
 		case B_ABOUT_REQUESTED: {
-			BAboutWindow* aboutWin = new BAboutWindow("TAResizer", "application/x-vnd.TAResizer");
-			aboutWin->AddDescription("A simple application that allows quick dynamic resizing of any translator"
-			" supported image and much much more.");
+			BAboutWindow* aboutWin = new BAboutWindow(B_TRANSLATE("TAResizer"), "application/x-vnd.TAResizer");
+			aboutWin->AddDescription(B_TRANSLATE("A simple application that allows quick dynamic"
+				" resizing of any translator supported image and much much more."));
 			aboutWin->AddCopyright(1999, "Jonathan Villemure");
 			const char* authors[] = {
 				"Jonathan Villemure",
@@ -66,7 +71,7 @@ void OptionWindow::MessageReceived(BMessage* message)
 		case LOADW:	Option->SetLargeur(Option->SavedW);break;
 		case CHANGE_EFFECT:	Option->ChangeEffect(message->FindInt16("Effect"));break;
 		case APPLY:	Option->ApplyEffect();break;
-		
+
 		case RESET:
 		{	//redirige le message vers l'autre fenetre
 			Option->CheckBox->SetValue(B_CONTROL_ON); //coche par defaut
@@ -75,7 +80,7 @@ void OptionWindow::MessageReceived(BMessage* message)
 
 		case UNLOCK_H: LockH--;break;
 		case UNLOCK_W: LockW--;break;
-		
+
 		case MOD_WIDTH :
 		{
 			if(LockW > 0) return;
@@ -103,32 +108,32 @@ void OptionWindow::MessageReceived(BMessage* message)
 		}break;
 
 		case TEXT_WIDTH:
-		{/*nous est envoye par la fenetre principale, ca va causer une 
-		modification au text box mais on doit pas dire a la fenetre 
-		principale de se resizer pcq c'est pas l'user qui a modifier 
+		{/*nous est envoye par la fenetre principale, ca va causer une
+		modification au text box mais on doit pas dire a la fenetre
+		principale de se resizer pcq c'est pas l'user qui a modifier
 		les valeurs*/
 			LockW++;
-			Option->SetLargeur(message->FindInt16("NewWidth"));		
+			Option->SetLargeur(message->FindInt16("NewWidth"));
 			PostMessage(UNLOCK_W, NULL);
 		}break;
 
 		case TEXT_HEIGHT:
 		{//voir notes de la case d'avant
 			LockH++;
-			Option->SetHauteur(message->FindInt16("NewHeight"));		
+			Option->SetHauteur(message->FindInt16("NewHeight"));
 			PostMessage(UNLOCK_H, NULL);
 		}break;
-		
+
 		case UNDOOK:
 		{//enable undo button
 			Option->Undo->SetEnabled(true);
 		}break;
-		
+
 		case UNDONOK:
 		{//disable undo button
 			Option->Undo->SetEnabled(false);
 		}break;
-		
+
 		default: BWindow::MessageReceived(message);
 	}
 }
