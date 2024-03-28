@@ -3,6 +3,7 @@
 
 #include <TranslationUtils.h>
 #include <Bitmap.h>
+#include <FilePanel.h>
 #include <String.h>
 #include <View.h>
 #include "enum.h"
@@ -32,7 +33,7 @@ class MainView : public BView
 	translator_id* all_translators;
 	int CurrentTranslator;
 	int CurrentOutput;
-	
+
 	MainView();
 	~MainView();
 	bool GetImage(const char* path);
@@ -40,7 +41,7 @@ class MainView : public BView
 	virtual void MessageReceived(BMessage *message);
 	virtual void MouseDown(BPoint where);
 	virtual void MouseUp(BPoint where);
-	virtual void MouseMoved(BPoint point, uint32 transit, const BMessage* message);	
+	virtual void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
 	void SmoothScale(BBitmap* origin, BBitmap* destination);
 	void ToggleRatio();
 	void ResetImage();
@@ -65,6 +66,9 @@ class MainView : public BView
 	void AddBitmap(BBitmap* B); //add a bitmap to the deque
 	void Undo(); //Go back to previous image in deque
 	void Flush(); //Flush all image in the deque
+
+ private:
+	BFilePanel*	 fOpenPanel;
 };
 
 #endif

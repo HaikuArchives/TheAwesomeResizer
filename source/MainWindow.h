@@ -1,11 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <Window.h> //BWindow 
+#include <Window.h> //BWindow
 #include "MainView.h"
 #include "enum.h"
 
-class MainWindow : public BWindow 
+class MainWindow : public BWindow
 {
  public:
 	bool BigGrip;

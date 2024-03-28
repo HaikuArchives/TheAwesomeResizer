@@ -10,6 +10,7 @@
 #include <NodeInfo.h>
 #include <Screen.h>
 #include <Application.h>
+#include "RefFilters.h"
 #include "main.h"
 #include <stdlib.h>
 
@@ -39,6 +40,9 @@ MainView::MainView()
 	CurrentOutput = -1;
 	Clipping1 = BPoint(-1,-1);
 	Clipping2 = BPoint(-1,-1);
+
+	fOpenPanel = new BFilePanel(
+					B_OPEN_PANEL,NULL, NULL, B_FILE_NODE, true, NULL, new ImageFilter());
 }
 //----------------------------------------------------------------------
 MainView::~MainView()
@@ -48,6 +52,7 @@ MainView::~MainView()
 		delete OriginalBitmap;
 		delete FirstBitmap;
 	}
+	delete fOpenPanel;
 }
 //----------------------------------------------------------------------
 BRect MainView::GetRegion()
@@ -321,6 +326,7 @@ void MainView::MessageReceived(BMessage *message)
 
    			else BView::MessageReceived(message);break;
    		}
+
    		default:BView::MessageReceived(message);break;
 	}
 }
@@ -358,6 +364,11 @@ void MainView::MouseDown(BPoint where)
 		((Resizer*)be_app)->Mouse->PostMessage(Message);
 
 		return;
+	}
+
+	else if (buttons == B_PRIMARY_MOUSE_BUTTON && OriginalBitmap == NULL) // Left click on empty window
+	{
+		fOpenPanel->Show();
 	}
 
 	else if(!BRect(GetRegion()).Contains(where))
