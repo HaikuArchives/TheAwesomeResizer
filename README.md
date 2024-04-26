@@ -13,7 +13,7 @@
 
 ## How it works (The "Manual")
 
-- Drag'n Drop an image file on the window to show it, or click the dropzone for file open dialog.
+- Drag'n Drop an image file on the window to show it, or click the dropzone for a file open dialog.
 - Resizing the window (with the borders) resize the image.
 - You can also enter the width and height directly.
 - Uncheck "Aspect Ratio" and the image will fit the entire window.
@@ -47,7 +47,7 @@
 
 #### What's new (in v3.3)?
 - Support for localization
-- Click empty image window for file open dialog
+- Click into dropzone window for file open dialog
 
 #### What's new (in v3.2)?
 - New Coord window shows current mouse position & size of current selection.
