@@ -181,15 +181,15 @@ void OptionView::FillPopupEffect()
 {
 	BMessage* Rotation = new BMessage(CHANGE_EFFECT);
 	Rotation->AddInt16("Effect", ROTATE);
-	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("90 Rotation"), Rotation));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("90° rotation"), Rotation));
 
 	BMessage* FlipH = new BMessage(CHANGE_EFFECT);
 	FlipH->AddInt16("Effect", FLIPH);
-	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Flip Top-Bottom"), FlipH));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Flip top-bottom"), FlipH));
 
 	BMessage* FlipV = new BMessage(CHANGE_EFFECT);
 	FlipV->AddInt16("Effect", FLIPV);
-	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Flip Left-Right"), FlipV));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Flip left-right"), FlipV));
 
 	BMessage* Light = new BMessage(CHANGE_EFFECT);
 	Light->AddInt16("Effect", LIGHT);
@@ -221,15 +221,15 @@ void OptionView::FillPopupEffect()
 
 	BMessage* Srg = new BMessage(CHANGE_EFFECT);
 	Srg->AddInt16("Effect", SRG);
-	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap Red-Green"), Srg));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap red-green"), Srg));
 
 	BMessage* Srb = new BMessage(CHANGE_EFFECT);
 	Srb->AddInt16("Effect", SRB);
-	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap Red-Blue"), Srb));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap red-blue"), Srb));
 
 	BMessage* Sgb = new BMessage(CHANGE_EFFECT);
 	Sgb->AddInt16("Effect", SGB);
-	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap Green-Blue"), Sgb));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Swap green-blue"), Sgb));
 
 	BMessage* Screenshot = new BMessage(CHANGE_EFFECT);
 	Screenshot->AddInt16("Effect", SCREENSHOT);
