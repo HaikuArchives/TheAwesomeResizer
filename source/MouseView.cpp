@@ -12,8 +12,8 @@
 MouseView::MouseView()
 	: BView("MouseView", B_WILL_DRAW)
 {
-	Coord = new BStringView(B_TRANSLATE("Coord"), "X:0 Y:0");
-	Size = new BStringView(B_TRANSLATE("Size"), "- x -");
+	Coord = new BStringView("Coord", "X:0 Y:0");
+	Size = new BStringView("Size", "- x -");
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
 		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
@@ -27,7 +27,7 @@ void MouseView::ShowCoord(float x, float y)
 {
 	BString temp;
 	if(x > 4096 || x < 0 || y > 4096 || y < 0)
-		temp << B_TRANSLATE("Out of Range");
+		temp << B_TRANSLATE("Out of range");
 
 	else
 		temp << "X:" << ((uint32)x) << " Y:" << ((uint32)y);
