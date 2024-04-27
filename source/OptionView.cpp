@@ -213,7 +213,7 @@ void OptionView::FillPopupEffect()
 
 	BMessage* Baw = new BMessage(CHANGE_EFFECT);
 	Baw->AddInt16("Effect", BAW);
-	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Black & White"), Baw));
+	PopupEffect->AddItem(new BMenuItem(B_TRANSLATE("Grayscale"), Baw));
 
 	BMessage* Invert = new BMessage(CHANGE_EFFECT);
 	Invert->AddInt16("Effect", INVERT);
