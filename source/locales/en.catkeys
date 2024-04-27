@@ -1,4 +1,4 @@
-1	English	application/x-vnd.TAResizer	3281693760
+1	English	application/x-vnd.TAResizer	373938711
 Darkness	OptionView		Darkness
 Flip left-right	OptionView		Flip left-right
 Reset	OptionView		Reset
@@ -12,6 +12,7 @@ Smooth scaling	OptionView		Smooth scaling
 Blur	OptionView		Blur
 Out of range	MouseView		Out of range
 Screenshot	OptionView		Screenshot
+Grayscale	OptionView		Grayscale
 Preserve aspect ratio	OptionView		Preserve aspect ratio
 Choose	OptionView		Choose
 Drunk	OptionView		Drunk
@@ -35,4 +36,3 @@ Choose an action	OptionView		Choose an action
 Working…	MainView		Working…
 Flip top-bottom	OptionView		Flip top-bottom
 Melt	OptionView		Melt
-Black & White	OptionView		Black & White
