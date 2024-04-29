@@ -7,7 +7,7 @@
 
 //-------------------------------------------------------------------
 MainWindow::MainWindow()
-	: BWindow(BRect(240, 30, 440, 130), B_TRANSLATE_SYSTEM_NAME("The Awesome Resizer"),
+	: BWindow(BRect(240, 30, 440, 130), B_TRANSLATE("TA: (No image)"),
 	B_TITLED_WINDOW, B_NOT_ZOOMABLE | B_WILL_ACCEPT_FIRST_CLICK)
 {
 	Main = new MainView();
@@ -119,7 +119,7 @@ void MainWindow::MessageReceived(BMessage * message)
 
 		default:BWindow::MessageReceived(message);break;
 	}
-	SetTitle(B_TRANSLATE_SYSTEM_NAME("The Awesome Resizer"));
+	//SetTitle(B_TRANSLATE("TAR: (No image)"));
 	UpdateIfNeeded();
 }
 //-------------------------------------------------------------------

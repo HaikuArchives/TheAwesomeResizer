@@ -92,6 +92,11 @@ bool MainView::GetImage(const char* path)
 	ResizeTo(OriginalBitmap->Bounds().right, OriginalBitmap->Bounds().bottom); //grosseur originale
 	Window()->ResizeTo(OriginalBitmap->Bounds().right, OriginalBitmap->Bounds().bottom);
 	Flush(); //flush les vieux undo...
+	BString windowTitle(path);
+	windowTitle.Remove(0, windowTitle.FindLast("/") + 1);
+	windowTitle.Prepend("TAR: ");
+
+	Window()->SetTitle(windowTitle);
 	return true;
 }
 //----------------------------------------------------------------------
