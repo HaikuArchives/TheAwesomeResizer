@@ -11,7 +11,7 @@
 
 //-------------------------------------------------------------------
 OptionWindow::OptionWindow()
-	: BWindow(BRect(10, 30, 10, 30), B_TRANSLATE("Options"), B_TITLED_WINDOW,
+	: BWindow(BRect(10, 30, 10, 30), B_TRANSLATE_SYSTEM_NAME("The Awesome Resizer"), B_TITLED_WINDOW,
 	  B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	Option = new OptionView();
