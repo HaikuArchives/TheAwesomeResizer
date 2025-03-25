@@ -1,4 +1,4 @@
-1	English	application/x-vnd.TAResizer	373938711
+1	English	application/x-vnd.TAResizer	1719132074
 Darkness	OptionView		Darkness
 Flip left-right	OptionView		Flip left-right
 Reset	OptionView		Reset
@@ -19,6 +19,8 @@ Drunk	OptionView		Drunk
 Swap green-blue	OptionView		Swap green-blue
 Apply	OptionView		Apply
 Swap red-blue	OptionView		Swap red-blue
+TAR: (No image)	MainView		TAR: (No image)
+TAR: (No image)	MainWindow		TAR: (No image)
 Coordinates window	OptionView		Coordinates window
 Invert	OptionView		Invert
 TAResizer	OptionWindow		TAResizer
@@ -27,11 +29,10 @@ A simple application that allows quick dynamic resizing of any translator suppor
 90° rotation	OptionView		90° rotation
 Load	OptionView		Load
 Drag and drop an image	MainView		Drag and drop an image
-Filename:	OptionView		Filename:
 Save	OptionView		Save
+Filename:	OptionView		Filename:
 Format:	OptionView		Format:
 Swap red-green	OptionView		Swap red-green
-Options	OptionWindow		Options
 Choose an action	OptionView		Choose an action
 Working…	MainView		Working…
 Flip top-bottom	OptionView		Flip top-bottom

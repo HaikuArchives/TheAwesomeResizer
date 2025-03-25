@@ -1,18 +1,19 @@
-#include <Catalog.h>
 #include "MainView.h"
-#include <Path.h>
-#include <TranslationUtils.h>
-#include <TranslatorRoster.h>
+#include "RefFilters.h"
+#include "WindowTitleGuard.h"
+#include "main.h"
+#include <Application.h>
+#include <BitmapStream.h>
+#include <Catalog.h>
 #include <Directory.h>
 #include <File.h>
-#include <BitmapStream.h>
-#include <string.h>
 #include <NodeInfo.h>
+#include <Path.h>
 #include <Screen.h>
-#include <Application.h>
-#include "RefFilters.h"
-#include "main.h"
+#include <TranslationUtils.h>
+#include <TranslatorRoster.h>
 #include <stdlib.h>
+#include <string.h>
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "MainView"
@@ -651,7 +652,7 @@ void MainView::Dark()
 
 	rgb_color CurrentColor;
 	int r, g, b;
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
@@ -683,7 +684,7 @@ void MainView::Light()
 
 	rgb_color CurrentColor;
 	int r, g, b;
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
@@ -713,7 +714,7 @@ void MainView::Blur()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 
 	rgb_color CC; //current color
 	rgb_color T; //top color
@@ -837,7 +838,7 @@ void MainView::BlackAndWhite()
 
 	rgb_color CurrentColor;
 	int moy;
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
@@ -875,7 +876,7 @@ void MainView::SmoothScale()
 	BBitmap* Smooth = new BBitmap(BRect(0,0, w-1, h-1), B_RGB32, true);
 	int widthSize = (int)(Smooth->BytesPerRow()/4);
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(y=0; y < h; y++)
 		for(x=0; x < w; x++)
 		{//pour chaque pixel
@@ -952,7 +953,7 @@ void MainView::Melt()
 	rgb_color RatioMajor, RatioMinor, RatioFinal;
 	RatioFinal.alpha = 255;
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	//premiere rangee, non modifiee
 	for(int RowSpecial = 0; RowSpecial < width; RowSpecial++)
 		((rgb_color *)Smoothed->Bits())[RowSpecial] =
@@ -985,7 +986,8 @@ void MainView::Invert()
 
 	rgb_color invertedColor;
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
 		{
@@ -1012,7 +1014,7 @@ void MainView::Drunk()
 	rgb_color PC; //preceding color
 	rgb_color NC; //next color
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	//premiere et derniere rangees non modifiee
 	for(int RowSpecial = 0; RowSpecial < width; RowSpecial++)
 		((rgb_color *)Barney->Bits())[RowSpecial] =
@@ -1046,7 +1048,7 @@ void MainView::InverseRG()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	rgb_color invertedColor;
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
@@ -1071,7 +1073,7 @@ void MainView::InverseRB()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	rgb_color invertedColor;
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)
@@ -1096,7 +1098,7 @@ void MainView::InverseGB()
 	int height = (int)OriginalBitmap->Bounds().bottom+1;
 	int widthSize = (int)(OriginalBitmap->BytesPerRow()/4);
 
-	Window()->SetTitle(B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
+	WindowTitleGuard guard(Window(), B_TRANSLATE("Working" B_UTF8_ELLIPSIS));
 	rgb_color invertedColor;
 	for(int row = 0; row < height; row++)
 		for(int col = 0; col < width; col++)

@@ -8,8 +8,9 @@
 
 //-------------------------------------------------------------------
 MainWindow::MainWindow()
-	: BWindow(BRect(240, 30, 440, 130), B_TRANSLATE("TA: (No image)"),
-	B_TITLED_WINDOW, B_NOT_ZOOMABLE | B_WILL_ACCEPT_FIRST_CLICK)
+	:
+	BWindow(BRect(240, 30, 440, 130), B_TRANSLATE("TAR: (No image)"), B_DOCUMENT_WINDOW,
+		B_NOT_ZOOMABLE | B_WILL_ACCEPT_FIRST_CLICK)
 {
 	Main = new MainView();
 	AddChild(Main);
@@ -19,7 +20,7 @@ MainWindow::MainWindow()
 //-------------------------------------------------------------------
 bool MainWindow::QuitRequested()
 {
-	if(((Resizer*)be_app)->Option && !((Resizer*)be_app)->Option->IsHidden()) {
+	if (((Resizer*)be_app)->Option && !((Resizer*)be_app)->Option->IsHidden()) {
 		// If option window is still open, don't quit yet
 		if (Main->HasImage()) {
 			Main->ClearImage();
@@ -128,7 +129,6 @@ void MainWindow::MessageReceived(BMessage * message)
 
 		default:BWindow::MessageReceived(message);break;
 	}
-	//SetTitle(B_TRANSLATE("TAR: (No image)"));
 	UpdateIfNeeded();
 }
 //-------------------------------------------------------------------
