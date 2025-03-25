@@ -66,6 +66,8 @@ class MainView : public BView
 	void AddBitmap(BBitmap* B); //add a bitmap to the deque
 	void Undo(); //Go back to previous image in deque
 	void Flush(); //Flush all image in the deque
+	bool HasImage() { return OriginalBitmap != NULL; }
+	void ClearImage();
 
  private:
 	BFilePanel*	 fOpenPanel;

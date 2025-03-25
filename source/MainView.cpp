@@ -1112,3 +1112,10 @@ void MainView::InverseGB()
 	Invalidate();
 }
 //-------------------------------------------------------------------
+void MainView::ClearImage()
+{
+        OriginalBitmap = NULL;
+        Window()->ResizeTo(200, 100);
+        Window()->SetTitle(B_TRANSLATE("TAR: (No image)"));
+        Invalidate();
+}
