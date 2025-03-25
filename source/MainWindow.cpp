@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "main.h"
 #include <Application.h>
 #include <Catalog.h>
 
@@ -18,6 +19,14 @@ MainWindow::MainWindow()
 //-------------------------------------------------------------------
 bool MainWindow::QuitRequested()
 {
+	if(((Resizer*)be_app)->Option && !((Resizer*)be_app)->Option->IsHidden()) {
+		// If option window is still open, don't quit yet
+		if (Main->HasImage()) {
+			Main->ClearImage();
+			return false;
+		}
+	}
+
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true; //on permet de quitter
 }
