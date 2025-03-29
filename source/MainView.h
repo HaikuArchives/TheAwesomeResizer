@@ -1,56 +1,56 @@
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
-#include <TranslationUtils.h>
 #include <Bitmap.h>
 #include <FilePanel.h>
 #include <String.h>
+#include <TranslationUtils.h>
 #include <View.h>
-#include "enum.h"
+
 #include <deque>
 
 using std::deque;
 
 typedef deque<BBitmap*>::iterator ITER;
 
-class MainView : public BView
-{
-	BBitmap* FirstBitmap; //le bitmap qui a ete drope au debut
-	BBitmap* OriginalBitmap; //bitmap courrant
-	BBitmap* ModifiedBitmap; //utilise pour le clipping
-	BBitmap* offscreenBitmap; //utilise pour le offscreen drawing
-	BView* offscreenView;
-	deque<BBitmap*> file; //pour les undo
-	bool DontResize;
-	double Ratio;
-	bool KeepRatio;
-	char* FileName;
-	BPoint Clipping1;
-	BPoint Clipping2;
-	bool dragging;
+class MainView : public BView {
+	BBitmap* fFirstBitmap; // the Bitmap dropped a launch
+	BBitmap* fOriginalBitmap; // current bitmap
+	BBitmap* fModifiedBitmap; // used for clipping
+	BBitmap* fOffscreenBitmap; // used for offscreen drawing
+	BView* fOffscreenView;
+	deque<BBitmap*> fFile; // used for undo
+	bool fDontResize;
+	double fRatio;
+	bool fKeepRatio;
+	char* fFileName;
+	BPoint fClipPoint1;
+	BPoint fClipPoint2;
+	bool fDragging;
 
- public:
+public:
 	translator_id* all_translators;
-	int CurrentTranslator;
-	int CurrentOutput;
+	int fCurrentTranslator;
+	int fCurrentOutput;
 
 	MainView();
 	~MainView();
-	bool GetImage(const char* path);
+
 	virtual void Draw(BRect);
-	virtual void MessageReceived(BMessage *message);
+	virtual void MessageReceived(BMessage* message);
 	virtual void MouseDown(BPoint where);
 	virtual void MouseUp(BPoint where);
 	virtual void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
+
 	void SmoothScale(BBitmap* origin, BBitmap* destination);
 	void ToggleRatio();
 	void ResetImage();
 	void Copy(BMessage*);
+
 	void ResizeImage();
 	void ResizeImage(int width, int height);
 	void RotateImage();
 	void Flip(bool horizontal);
-	BRect GetRegion();
 	void Melt();
 	void Dark();
 	void Light();
@@ -63,14 +63,17 @@ class MainView : public BView
 	void InverseRB();
 	void InverseGB();
 	void SmoothScale();
-	void AddBitmap(BBitmap* B); //add a bitmap to the deque
-	void Undo(); //Go back to previous image in deque
-	void Flush(); //Flush all image in the deque
-	bool HasImage() { return OriginalBitmap != NULL; }
-	void ClearImage();
 
- private:
-	BFilePanel*	 fOpenPanel;
+	void AddBitmap(BBitmap* B); // add a bitmap to the deque
+	void Undo(); // Go back to previous image in deque
+	void Flush(); // Flush all images in the deque
+
+	bool HasImage() { return fOriginalBitmap != NULL; }
+	void ClearImage();
+	bool GetImage(const char* path);
+	BRect GetRegion();
+private:
+	BFilePanel* fOpenPanel;
 };
 
 #endif

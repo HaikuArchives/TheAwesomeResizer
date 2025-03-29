@@ -1,20 +1,19 @@
 #ifndef OPTIONWINDOW_H
 #define OPTIONWINDOW_H
 
-#include <Window.h> //BWindow 
+#include "Constants.h"
 #include "OptionView.h"
-#include "enum.h"
+#include <Window.h>
 
-class OptionWindow : public BWindow 
-{
- public:
-	int LockW; //flag pour eviter les aller retour entre les 2 fenetres
-	int LockH; //flag pour eviter les aller retour entre les 2 fenetres
+class OptionWindow : public BWindow {
+public:
+	int fLockW;
+	int fLockH;
 
-	OptionView* Option;
+	OptionView* fOptionView;
 
-	OptionWindow(); //constructeur
-	virtual	bool QuitRequested(); //pour quitter
+	OptionWindow();
+	virtual bool QuitRequested();
 	virtual void MessageReceived(BMessage* message);
 };
 

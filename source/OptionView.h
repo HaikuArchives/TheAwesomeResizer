@@ -2,49 +2,47 @@
 #define OPTIONVIEW_H
 
 #include <Box.h>
+#include <Button.h>
+#include <CheckBox.h>
+#include <MenuField.h>
+#include <MenuItem.h>
+#include <PopUpMenu.h>
 #include <StringView.h>
 #include <TextControl.h>
-#include <CheckBox.h>
-#include <Button.h>
-#include <MenuField.h>
-#include <PopUpMenu.h>
-#include <MenuItem.h>
 #include <TranslatorRoster.h>
-#include "enum.h"
 
-class OptionView : public BView
-{
- public:
-	BTextControl* Hauteur;
-	BTextControl* Largeur;
-	BTextControl* FileName;
-	BButton* SaveW;
-	BButton* SaveH;
-	BButton* LoadH;
-	BButton* LoadW;
-	BCheckBox* CheckBox;
-	BButton* Reset;
-	BButton* Undo;
-	BCheckBox* Smooth;
-	BMenuField* DropDownMenu;
-	BPopUpMenu* Popup;	
-	BMenuField* DropDownEffect;
-	BPopUpMenu* PopupEffect;
-	BButton* Apply;
-	BButton* Web;
-	BCheckBox* Coord;
-	BCheckBox* Grip;
-	int SavedH;
-	int SavedW;
-	int CurrentEffect;
+class OptionView : public BView {
+public:
+	BTextControl* fHeightTextbox;
+	BTextControl* fWidthTextbox;
+	BTextControl* fFileName;
+	BCheckBox* fAspectBox;
+	BCheckBox* fSmoothBox;
+	BButton* fResetButton;
+	BButton* fUndoButton;
+	BButton* fApplyButton;
+	BButton* fWebButton;
+	BMenuField* fFormatMenu;
+	BPopUpMenu* fFormatPopup;
+	BMenuField* fEffectMenu;
+	BPopUpMenu* fEffectPopup;
+
+	// BCheckBox* Coord;
+	// BCheckBox* Grip;
+	int fSavedHeight;
+	int fSavedWidth;
+
+	int fCurrentEffect;
 
 	OptionView();
-	void SetHauteur(int H);
-	void SetLargeur(int W);
+	void SetHeight(int height);
+	void SetWidth(int width);
 	void ChangeEffect(int effect);
 	void ApplyEffect();
-	void FillPopup();
-	void FillPopupEffect();
+
+private:
+	void _CreateFormatPopup();
+	void _CreateEffectPopup();
 };
 
 #endif

@@ -1,19 +1,19 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <Window.h> //BWindow
 #include "MainView.h"
-#include "enum.h"
+#include "Constants.h"
 
-class MainWindow : public BWindow
-{
- public:
-	bool BigGrip;
-	bool DontUpdate;
-	MainView* Main;
+#include <Window.h>
 
-	MainWindow(); //constructeur
-	virtual	bool QuitRequested(); //pour quitter
+class MainWindow : public BWindow {
+public:
+	bool fBigGrip;
+	bool fDontUpdate;
+	MainView* fMainView;
+
+	MainWindow();
+	virtual bool QuitRequested();
 	virtual void FrameResized(float W, float H);
 	virtual void MessageReceived(BMessage* message);
 };
