@@ -12,13 +12,13 @@
 MouseView::MouseView()
 	: BView("MouseView", B_WILL_DRAW)
 {
-	Coord = new BStringView("Coord", "X:0 Y:0");
-	Size = new BStringView("Size", "- x -");
+	fCoord = new BStringView("Coord", "X:0 Y:0");
+	fSize = new BStringView("Size", "- x -");
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
 		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
-			.Add(Coord)
-			.Add(Size)
+			.Add(fCoord)
+			.Add(fSize)
 		.End();
 
 }
@@ -32,12 +32,12 @@ void MouseView::ShowCoord(float x, float y)
 	else
 		temp << "X:" << ((uint32)x) << " Y:" << ((uint32)y);
 
-	Coord->SetText(temp.String());
+	fCoord->SetText(temp.String());
 }
 //----------------------------------------------------------------------
 void MouseView::ClearClip()
 {
-	Size->SetText("- x -")	;
+	fSize->SetText("- x -")	;
 }
 //----------------------------------------------------------------------
 void MouseView::Clip1(float x, float y)
@@ -61,6 +61,6 @@ void MouseView::Clip2(float x, float y)
 	else
 		temp << lenghtX << " x " << lenghtY;
 
-	Size->SetText(temp.String());
+	fSize->SetText(temp.String());
 }
 //----------------------------------------------------------------------

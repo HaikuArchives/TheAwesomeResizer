@@ -7,10 +7,10 @@
 class MouseView : public BView
 {
  private:
-	BStringView* Coord;
-	BStringView* Size;
+	BStringView* fCoord;
+	BStringView* fSize;
 	int	Clip1x, Clip1y, Clip2x, Clip2y;
-	
+
  public:
 	MouseView();
 	void ShowCoord(float x, float y);

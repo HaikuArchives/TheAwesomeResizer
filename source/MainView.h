@@ -15,24 +15,24 @@ typedef deque<BBitmap*>::iterator ITER;
 
 class MainView : public BView
 {
-	BBitmap* FirstBitmap; //le bitmap qui a ete drope au debut
-	BBitmap* OriginalBitmap; //bitmap courrant
-	BBitmap* ModifiedBitmap; //utilise pour le clipping
-	BBitmap* offscreenBitmap; //utilise pour le offscreen drawing
-	BView* offscreenView;
-	deque<BBitmap*> file; //pour les undo
-	bool DontResize;
-	double Ratio;
-	bool KeepRatio;
-	char* FileName;
-	BPoint Clipping1;
-	BPoint Clipping2;
-	bool dragging;
+	BBitmap* fFirstBitmap; //the Bitmap dropped a launch
+	BBitmap* fOriginalBitmap; //current bitmap
+	BBitmap* fModifiedBitmap; //used for clipping
+	BBitmap* fOffscreenBitmap; //used for offscreen drawing
+	BView* fOffscreenView;
+	deque<BBitmap*> fFile; //used for undo
+	bool fDontResize;
+	double fRatio;
+	bool fKeepRatio;
+	char* fFileName;
+	BPoint fClipPoint1;
+	BPoint fClipPoint2;
+	bool fDragging;
 
  public:
 	translator_id* all_translators;
-	int CurrentTranslator;
-	int CurrentOutput;
+	int fCurrentTranslator;
+	int fCurrentOutput;
 
 	MainView();
 	~MainView();
@@ -65,8 +65,8 @@ class MainView : public BView
 	void SmoothScale();
 	void AddBitmap(BBitmap* B); //add a bitmap to the deque
 	void Undo(); //Go back to previous image in deque
-	void Flush(); //Flush all image in the deque
-	bool HasImage() { return OriginalBitmap != NULL; }
+	void Flush(); //Flush all images in the deque
+	bool HasImage() { return fOriginalBitmap != NULL; }
 	void ClearImage();
 
  private:

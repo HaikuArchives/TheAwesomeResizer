@@ -1,19 +1,19 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <Application.h> //BApplication
+#include <Application.h>
 #include <Entry.h>
-#include "MainWindow.h" //la fenetre de l'application
+#include "MainWindow.h"
 #include "OptionWindow.h"
 #include "MouseWindow.h"
 
 class Resizer : public BApplication
 {
  public:
- 	MainWindow* Fenetre;
-	OptionWindow* Option;
-	MouseWindow* Mouse;
-	Resizer(); //constructeur de l'application
+ 	MainWindow* fMainWin;
+	OptionWindow* fOptionWin;
+	MouseWindow* fMouseWin;
+	Resizer();
 	virtual void RefsReceived( BMessage *message );
 };
 

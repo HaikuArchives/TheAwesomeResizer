@@ -8,9 +8,9 @@
 class MainWindow : public BWindow
 {
  public:
-	bool BigGrip;
-	bool DontUpdate;
-	MainView* Main;
+	bool fBigGrip;
+	bool fDontUpdate;
+	MainView* fMainView;
 
 	MainWindow(); //constructeur
 	virtual	bool QuitRequested(); //pour quitter
