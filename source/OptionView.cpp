@@ -1,19 +1,22 @@
 #include "OptionView.h"
-#include <String.h>
-#include <Application.h>
-#include <LayoutBuilder.h>
-#include <TranslatorFormats.h>
 #include "main.h"
+#include <Application.h>
 #include <Catalog.h>
+#include <LayoutBuilder.h>
+#include <String.h>
+#include <TranslatorFormats.h>
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "OptionView"
 
-//----------------------------------------------------------------------
+
 OptionView::OptionView()
-	: BView("optionView", B_WILL_DRAW)
+	:
+	BView("optionView", B_WILL_DRAW)
 {
-	fSavedWidth = 640; fSavedHeight = 480; fCurrentEffect = -1;
+	fSavedWidth = 640;
+	fSavedHeight = 480;
+	fCurrentEffect = -1;
 
 	fWidthTextbox = new BTextControl(B_TRANSLATE("Width"), B_EMPTY_STRING, "", NULL);
 	fWidthTextbox->SetModificationMessage(new BMessage(MOD_WIDTH));
@@ -24,10 +27,10 @@ OptionView::OptionView()
 	fAspectBox = new BCheckBox("Ratio", B_TRANSLATE("Preserve aspect ratio"), new BMessage(RATIO));
 	fAspectBox->SetValue(B_CONTROL_ON);
 
-	fFileName = new BTextControl("Filename",B_TRANSLATE("Filename:"), "", NULL);
+	fFileName = new BTextControl("Filename", B_TRANSLATE("Filename:"), "", NULL);
 
 	fFormatPopup = new BPopUpMenu(B_TRANSLATE("Choose"));
- 	((Resizer*)be_app)->fMainWin->Lock();
+	((Resizer*)be_app)->fMainWin->Lock();
 	_CreateFormatPopup();
 	((Resizer*)be_app)->fMainWin->Unlock();
 	fFormatMenu = new BMenuField("DropTranslator", B_TRANSLATE("Format:"), fFormatPopup);
@@ -36,49 +39,50 @@ OptionView::OptionView()
 	fUndoButton = new BButton("Undo", B_TRANSLATE("Undo"), new BMessage(UNDO));
 
 	fSmoothBox = new BCheckBox("Smooth", B_TRANSLATE("Smooth scaling"), new BMessage(SMOOTH));
-	//Smooth->SetValue(B_CONTROL_ON);
+	// Smooth->SetValue(B_CONTROL_ON);
 	fEffectPopup = new BPopUpMenu(B_TRANSLATE("Choose an action"));
 	_CreateEffectPopup();
 	fEffectMenu = new BMenuField("Effect", /*"Action:"*/ B_EMPTY_STRING, fEffectPopup);
 
-	//Bouton Grip
-	// Grip = new BCheckBox("Grip", "Show grip", new BMessage(GRIP));
+	// Bouton Grip
+	//  Grip = new BCheckBox("Grip", "Show grip", new BMessage(GRIP));
 
 	fApplyButton = new BButton("Apply", B_TRANSLATE("Apply"), new BMessage(APPLY));
 
-	//Bouton Coord
-	// Coord = new BCheckBox("Coord", B_TRANSLATE("Coordinates window"), new BMessage(COORD));
+	// Bouton Coord
+	//  Coord = new BCheckBox("Coord", B_TRANSLATE("Coordinates window"), new BMessage(COORD));
 
-	//Bouton About
-	// fWebButton = new BButton("About", B_TRANSLATE("About"), new BMessage(B_ABOUT_REQUESTED));
+	// Bouton About
+	//  fWebButton = new BButton("About", B_TRANSLATE("About"), new BMessage(B_ABOUT_REQUESTED));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
-		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING)
+		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING,
+			B_USE_DEFAULT_SPACING)
 		.AddGroup(B_HORIZONTAL, B_USE_ITEM_SPACING)
-			.Add(new BStringView("Size", B_TRANSLATE("Size:")))
-			.Add(fWidthTextbox)
-			.Add(new BStringView("separator", "x"))
-			.Add(fHeightTextbox)
+		.Add(new BStringView("Size", B_TRANSLATE("Size:")))
+		.Add(fWidthTextbox)
+		.Add(new BStringView("separator", "x"))
+		.Add(fHeightTextbox)
 		.End()
-			.Add(fAspectBox)
-			.Add(fSmoothBox)
-//			.Add(Grip)
-//			.Add(Coord)
+		.Add(fAspectBox)
+		.Add(fSmoothBox)
+		//			.Add(Grip)
+		//			.Add(Coord)
 		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-			.Add(fFileName->CreateLabelLayoutItem(), 0, 0)
-			.Add(fFileName->CreateTextViewLayoutItem(), 1, 0)
-			.Add(fFormatMenu->CreateLabelLayoutItem(), 0, 1)
-			.Add(fFormatMenu->CreateMenuBarLayoutItem(), 1, 1)
+		.Add(fFileName->CreateLabelLayoutItem(), 0, 0)
+		.Add(fFileName->CreateTextViewLayoutItem(), 1, 0)
+		.Add(fFormatMenu->CreateLabelLayoutItem(), 0, 1)
+		.Add(fFormatMenu->CreateMenuBarLayoutItem(), 1, 1)
 		.End()
 		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
 
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-			.Add(fResetButton, 0, 0)
-			.Add(fUndoButton, 1, 0)
-//			.Add(Web, 0, 1)
-			.Add(fEffectMenu, 0, 1, 2)
-			.Add(fApplyButton, 0, 2, 2)
+		.Add(fResetButton, 0, 0)
+		.Add(fUndoButton, 1, 0)
+		//			.Add(Web, 0, 1)
+		.Add(fEffectMenu, 0, 1, 2)
+		.Add(fApplyButton, 0, 2, 2)
 		.End();
 
 	fSmoothBox->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
@@ -88,43 +92,46 @@ OptionView::OptionView()
 	fApplyButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	// Coord->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 }
-//----------------------------------------------------------------------
-void OptionView::_CreateFormatPopup()
+
+
+void
+OptionView::_CreateFormatPopup()
 {
 	int32 count = 0;
-	status_t err = BTranslatorRoster::Default()->GetAllTranslators(&((Resizer*)be_app)->fMainWin->fMainView->all_translators, &count);
+	status_t err = BTranslatorRoster::Default()->GetAllTranslators(
+		&((Resizer*)be_app)->fMainWin->fMainView->all_translators, &count);
 
-	if(err >= B_OK)
-	{
+	if (err >= B_OK) {
 		err = B_ERROR;
-		for (int i=0; i<count; i++)
-		{
+		for (int i = 0; i < count; i++) {
 			const translation_format* FormatIn;
 			int32 FormatInCount;
-			if(BTranslatorRoster::Default()->GetInputFormats(((Resizer*)be_app)->fMainWin->fMainView->all_translators[i], &FormatIn, &FormatInCount) >= B_OK)
-			{
-				for(int j=0; j<FormatInCount; j++)
-				{
-					if(FormatIn[j].type == B_TRANSLATOR_BITMAP)
-					{
+			if (BTranslatorRoster::Default()->GetInputFormats(
+					((Resizer*)be_app)->fMainWin->fMainView->all_translators[i], &FormatIn,
+					&FormatInCount)
+				>= B_OK) {
+				for (int j = 0; j < FormatInCount; j++) {
+					if (FormatIn[j].type == B_TRANSLATOR_BITMAP) {
 						const translation_format* FormatOut;
 						int32 FormatOutCount;
-						if(BTranslatorRoster::Default()->GetOutputFormats(((Resizer*)be_app)->fMainWin->fMainView->all_translators[i], &FormatOut, &FormatOutCount) >= B_OK)
-						{
-							for(int k=0; k<FormatOutCount; k++)
-							{
-								if(FormatOut[k].type != B_TRANSLATOR_BITMAP)
-								{
+						if (BTranslatorRoster::Default()->GetOutputFormats(
+								((Resizer*)be_app)->fMainWin->fMainView->all_translators[i],
+								&FormatOut, &FormatOutCount)
+							>= B_OK) {
+							for (int k = 0; k < FormatOutCount; k++) {
+								if (FormatOut[k].type != B_TRANSLATOR_BITMAP) {
 									BMessage* Message = new BMessage(CHANGE_OUTPUT_FORMAT);
 									Message->AddInt16("translator", i);
 									Message->AddInt16("output", k);
 									BMenuItem* menuItem;
-									fFormatPopup->AddItem(menuItem = new BMenuItem(FormatOut[k].name, Message));
+									fFormatPopup->AddItem(
+										menuItem = new BMenuItem(FormatOut[k].name, Message));
 									err = B_OK;
 									// set default format
 									if (strcmp(FormatOut[k].MIME, "image/png") == 0) {
 										menuItem->SetMarked(true);
-										((Resizer*)be_app)->fMainWin->fMainView->fCurrentTranslator = i;
+										((Resizer*)be_app)->fMainWin->fMainView->fCurrentTranslator
+											= i;
 										((Resizer*)be_app)->fMainWin->fMainView->fCurrentOutput = k;
 									}
 								}
@@ -135,30 +142,38 @@ void OptionView::_CreateFormatPopup()
 			}
 		}
 	}
-	if(err != B_OK)
-		Window()->PostMessage(B_QUIT_REQUESTED); //should never happen
+	if (err != B_OK)
+		Window()->PostMessage(B_QUIT_REQUESTED); // should never happen
 }
-//----------------------------------------------------------------------
-void OptionView::SetHeight(int height)
+
+
+void
+OptionView::SetHeight(int height)
 {
 	BString temp;
 	temp << ((uint32)height);
 	fHeightTextbox->SetText(temp.String());
 }
-//----------------------------------------------------------------------
-void OptionView::SetWidth(int width)
+
+
+void
+OptionView::SetWidth(int width)
 {
 	BString temp;
 	temp << ((uint32)width);
 	fWidthTextbox->SetText(temp.String());
 }
-//----------------------------------------------------------------------
-void OptionView::ChangeEffect(int effect)
+
+
+void
+OptionView::ChangeEffect(int effect)
 {
 	fCurrentEffect = effect;
 }
-//----------------------------------------------------------------------
-void OptionView::_CreateEffectPopup()
+
+
+void
+OptionView::_CreateEffectPopup()
 {
 	BMessage* Rotation = new BMessage(CHANGE_EFFECT);
 	Rotation->AddInt16("Effect", ROTATE);
@@ -216,10 +231,11 @@ void OptionView::_CreateEffectPopup()
 	Screenshot->AddInt16("Effect", SCREENSHOT);
 	fEffectPopup->AddItem(new BMenuItem(B_TRANSLATE("Screenshot"), Screenshot));
 }
-//----------------------------------------------------------------------
-void OptionView::ApplyEffect()
+
+
+void
+OptionView::ApplyEffect()
 {
-	if(fCurrentEffect != -1)
+	if (fCurrentEffect != -1)
 		Window()->PostMessage(new BMessage(fCurrentEffect));
 }
-//----------------------------------------------------------------------
