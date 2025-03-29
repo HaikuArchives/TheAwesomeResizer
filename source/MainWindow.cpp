@@ -12,29 +12,29 @@ MainWindow::MainWindow()
 	BWindow(BRect(240, 30, 440, 130), B_TRANSLATE("TAR: (No image)"), B_DOCUMENT_WINDOW,
 		B_NOT_ZOOMABLE | B_WILL_ACCEPT_FIRST_CLICK)
 {
-	Main = new MainView();
-	AddChild(Main);
-	DontUpdate = false;
-	BigGrip = false;
+	fMainView = new MainView();
+	AddChild(fMainView);
+	fDontUpdate = false;
+	fBigGrip = false;
 }
 //-------------------------------------------------------------------
 bool MainWindow::QuitRequested()
 {
-	if (((Resizer*)be_app)->Option && !((Resizer*)be_app)->Option->IsHidden()) {
+	if (((Resizer*)be_app)->fOptionWin && !((Resizer*)be_app)->fOptionWin->IsHidden()) {
 		// If option window is still open, don't quit yet
-		if (Main->HasImage()) {
-			Main->ClearImage();
+		if (fMainView->HasImage()) {
+			fMainView->ClearImage();
 			return false;
 		}
 	}
 
 	be_app->PostMessage(B_QUIT_REQUESTED);
-	return true; //on permet de quitter
+	return true;
 }
 //-------------------------------------------------------------------
 void MainWindow::FrameResized(float W, float H)
 {
-	Main->ResizeImage(); //on demande de resizer
+	fMainView->ResizeImage();
 }
 //-------------------------------------------------------------------
 void MainWindow::MessageReceived(BMessage * message)
@@ -42,89 +42,68 @@ void MainWindow::MessageReceived(BMessage * message)
 	switch(message->what)
 	{
 		//fait la copie vers le tracker
-		case B_COPY_TARGET: Main->Copy(message);break;
+		case B_COPY_TARGET: fMainView->Copy(message);break;
 
-		//toggle le ratio
-		case RATIO: Main->ToggleRatio();break;
+		case RATIO: fMainView->ToggleRatio();break;
 
-		//reset l'image
-		case RESET: Main->ResetImage();break;
+		case RESET: fMainView->ResetImage();break;
 
-		//undo derniere action
-		case UNDO: Main->Undo();break;
+		case UNDO: fMainView->Undo();break;
 
-		//Smooth scale l'image
-		case SMOOTH: Main->Invalidate();break;
+		case SMOOTH: fMainView->Invalidate();break;
 
-		//rotation 90 degree
-		case ROTATE: Main->RotateImage();break;
+		case ROTATE: fMainView->RotateImage();break;
 
-		//flip horizontal
-		case FLIPH: Main->Flip(true);break;
+		case FLIPH: fMainView->Flip(true);break;
 
-		//flip vertical
-		case FLIPV: Main->Flip(false);break;
+		case FLIPV: fMainView->Flip(false);break;
 
-		//Assombrit
-		case DARK: Main->Dark();break;
+		case DARK: fMainView->Dark();break;
 
-		//Eclaircit
-		case LIGHT: Main->Light();break;
+		case LIGHT: fMainView->Light();break;
 
-		//Super Blur
-		case BLUR: Main->Blur();break;
+		case BLUR: fMainView->Blur();break;
 
-		//Black & White
-		case BAW: Main->BlackAndWhite();break;
+		case BAW: fMainView->BlackAndWhite();break;
 
-		//Pogne un screen shot de l'ecran sans le resizer
-		case SCREENSHOT: Main->GrabScreen();break;
+		case SCREENSHOT: fMainView->GrabScreen();break;
 
-		//Effet Melt sur une image
-		case MELT: Main->Melt();break;
+		case MELT: fMainView->Melt();break;
 
-		//Invert color
-		case INVERT: Main->Invert();break;
+		case INVERT: fMainView->Invert();break;
 
-		//Inverse Rouge et vert
-		case SRG: Main->InverseRG();break;
+		case SRG: fMainView->InverseRG();break;
 
-		//Inverse Rouge et bleu
-		case SRB: Main->InverseRB();break;
+		case SRB: fMainView->InverseRB();break;
 
-		//Inverse Vert et bleu
-		case SGB: Main->InverseGB();break;
+		case SGB: fMainView->InverseGB();break;
 
-		//Pogne un screen shot de l'ecran sans le resizer
-		case DRUNK: Main->Drunk();break;
+		case DRUNK: fMainView->Drunk();break;
 
-		//Toggle la grip de la fenetre
 		case GRIP:
 		{
-			if(BigGrip)	SetLook(B_TITLED_WINDOW_LOOK);
+			if(fBigGrip)	SetLook(B_TITLED_WINDOW_LOOK);
 			else		SetLook(B_DOCUMENT_WINDOW_LOOK);
-			BigGrip = !BigGrip;
+			fBigGrip = !fBigGrip;
 		}break;
 
-		//Change le type d'image en output
-		case CHANGE_OUTPUT:
+		case CHANGE_OUTPUT_FORMAT:
 		{
-			Main->CurrentTranslator = message->FindInt16("translator");
-			Main->CurrentOutput = message->FindInt16("output");
+			fMainView->fCurrentTranslator = message->FindInt16("translator");
+			fMainView->fCurrentOutput = message->FindInt16("output");
 		}break;
 
-		//Change Largeur
 		case MOD_WIDTH :
 		{
-			DontUpdate = true; //pas renvoyer une valeur
-			Main->ResizeImage(message->FindInt16("NewWidth"), -1);
+			fDontUpdate = true; //don't return a value
+			fMainView->ResizeImage(message->FindInt16("NewWidth"), -1);
 		}break;
 
 		//Change Hauteur
 		case MOD_HEIGHT :
 		{
-			DontUpdate = true; //pas renvoyer une valeurs
-			Main->ResizeImage(-1, message->FindInt16("NewHeight"));
+			fDontUpdate = true; //don't return a value
+			fMainView->ResizeImage(-1, message->FindInt16("NewHeight"));
 		}break;
 
 		default:BWindow::MessageReceived(message);break;

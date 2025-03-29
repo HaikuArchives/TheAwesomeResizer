@@ -15,36 +15,35 @@
 class OptionView : public BView
 {
  public:
-	BTextControl* Hauteur;
-	BTextControl* Largeur;
-	BTextControl* FileName;
-	BButton* SaveW;
-	BButton* SaveH;
-	BButton* LoadH;
-	BButton* LoadW;
-	BCheckBox* CheckBox;
-	BButton* Reset;
-	BButton* Undo;
-	BCheckBox* Smooth;
-	BMenuField* DropDownMenu;
-	BPopUpMenu* Popup;	
-	BMenuField* DropDownEffect;
-	BPopUpMenu* PopupEffect;
-	BButton* Apply;
-	BButton* Web;
-	BCheckBox* Coord;
-	BCheckBox* Grip;
-	int SavedH;
-	int SavedW;
-	int CurrentEffect;
+	BTextControl* fHeightTextbox;
+	BTextControl* fWidthTextbox;
+	BTextControl* fFileName;
+	BCheckBox* fAspectBox;
+	BButton* fResetButton;
+	BButton* fUndoButton;
+	BCheckBox* fSmoothBox;
+	BMenuField* fFormatMenu;
+	BPopUpMenu* fFormatPopup;
+	BMenuField* fEffectMenu;
+	BPopUpMenu* fEffectPopup;
+	BButton* fApplyButton;
+	BButton* fWebButton;
+	// BCheckBox* Coord;
+	// BCheckBox* Grip;
+	int fSavedHeight;
+	int fSavedWidth;
+
+	int fCurrentEffect;
 
 	OptionView();
-	void SetHauteur(int H);
-	void SetLargeur(int W);
+	void SetHeight(int height);
+	void SetWidth(int width);
 	void ChangeEffect(int effect);
 	void ApplyEffect();
-	void FillPopup();
-	void FillPopupEffect();
+
+private:
+	void _CreateFormatPopup();
+	void _CreateEffectPopup();
 };
 
 #endif
