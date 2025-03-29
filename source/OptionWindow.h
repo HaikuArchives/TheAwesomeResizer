@@ -1,20 +1,19 @@
 #ifndef OPTIONWINDOW_H
 #define OPTIONWINDOW_H
 
-#include <Window.h>
+#include "Constants.h"
 #include "OptionView.h"
-#include "enum.h"
+#include <Window.h>
 
-class OptionWindow : public BWindow
-{
- public:
+class OptionWindow : public BWindow {
+public:
 	int fLockW;
 	int fLockH;
 
 	OptionView* fOptionView;
 
 	OptionWindow();
-	virtual	bool QuitRequested();
+	virtual bool QuitRequested();
 	virtual void MessageReceived(BMessage* message);
 };
 

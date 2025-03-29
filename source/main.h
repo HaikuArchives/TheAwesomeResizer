@@ -1,20 +1,20 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "MainWindow.h"
+#include "MouseWindow.h"
+#include "OptionWindow.h"
 #include <Application.h>
 #include <Entry.h>
-#include "MainWindow.h"
-#include "OptionWindow.h"
-#include "MouseWindow.h"
 
-class Resizer : public BApplication
-{
- public:
- 	MainWindow* fMainWin;
+class Resizer : public BApplication {
+public:
+	virtual void RefsReceived(BMessage* message);
+
+	MainWindow* fMainWin;
 	OptionWindow* fOptionWin;
 	MouseWindow* fMouseWin;
 	Resizer();
-	virtual void RefsReceived( BMessage *message );
 };
 
 #endif
