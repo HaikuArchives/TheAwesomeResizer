@@ -1,3 +1,12 @@
+/*
+ * Copyright 1999-2025. All rights reserved.
+ * Distributed under the terms of the MIT license.
+ *
+ * Authors:
+ *	1999-2000 Jonathan Villemure
+ *	2018-2025 The HaikuArchives Team
+ *
+ */
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 

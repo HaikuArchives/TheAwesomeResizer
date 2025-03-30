@@ -2,7 +2,6 @@
  * Copyright 2024, Johan Wagenheim <johan@dospuntos.no>
  * All rights reserved. Distributed under the terms of the MIT license.
  */
-
 #ifndef WINDOWTITLEGUARD_H
 #define WINDOWTITLEGUARD_H
 
@@ -25,4 +24,4 @@ private:
 	BString fOriginalTitle;
 };
 
-#endif // _H
+#endif // WINDOWTITLEGUARD_H

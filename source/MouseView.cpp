@@ -1,3 +1,11 @@
+/*
+ * Copyright 1999-2025. All rights reserved.
+ * Distributed under the terms of the MIT license.
+ *
+ * Authors:
+ *	1999-2000 Jonathan Villemure
+ *
+ */
 #include "MouseView.h"
 
 #include <Application.h>
