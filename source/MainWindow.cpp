@@ -20,12 +20,15 @@
 MainWindow::MainWindow()
 	:
 	BWindow(BRect(240, 30, 440, 130), B_TRANSLATE("TAR: (No image)"), B_DOCUMENT_WINDOW,
-		B_NOT_ZOOMABLE | B_WILL_ACCEPT_FIRST_CLICK)
+		B_WILL_ACCEPT_FIRST_CLICK)
 {
 	fMainView = new MainView();
 	AddChild(fMainView);
 	fDontUpdate = false;
 	fBigGrip = false;
+	fZoomState = false;
+	fOriginalWidth = Bounds().Width();
+	fOriginalHeight = Bounds().Height();
 }
 
 
@@ -36,6 +39,7 @@ MainWindow::QuitRequested()
 		// If option window is still open, don't quit yet
 		if (fMainView->HasImage()) {
 			fMainView->ClearImage();
+			fZoomState = false;
 			return false;
 		}
 	}
@@ -66,8 +70,12 @@ MainWindow::MessageReceived(BMessage* message)
 			break;
 
 		case RESET:
+		{
 			fMainView->ResetImage();
-			break;
+			fZoomState = false;
+			fOriginalWidth = Bounds().Width();
+			fOriginalHeight = Bounds().Height();
+		} break;
 
 		case UNDO:
 			fMainView->Undo();
@@ -78,8 +86,11 @@ MainWindow::MessageReceived(BMessage* message)
 			break;
 
 		case ROTATE:
+		{
 			fMainView->RotateImage();
-			break;
+			fOriginalWidth = Bounds().Width();
+			fOriginalHeight = Bounds().Height();
+		} break;
 
 		case FLIPH:
 			fMainView->Flip(true);
@@ -148,6 +159,13 @@ MainWindow::MessageReceived(BMessage* message)
 			fMainView->fCurrentOutput = message->FindInt16("output");
 		} break;
 
+		case CHANGE_FILE:
+		{
+			fZoomState = false;
+			fOriginalWidth = Bounds().Width();
+			fOriginalHeight = Bounds().Height();
+		} break;
+
 		case MOD_WIDTH:
 		{
 			fDontUpdate = true; // don't return a value
@@ -165,4 +183,20 @@ MainWindow::MessageReceived(BMessage* message)
 			break;
 	}
 	UpdateIfNeeded();
+}
+
+
+void
+MainWindow::Zoom(BPoint origin, float width, float height)
+{
+	if (!fMainView->HasImage())
+		return;
+
+	if (!fZoomState) {
+		fZoomState = true;
+		MoveOnScreen();
+	} else {
+		fZoomState = false;
+		ResizeTo(fOriginalWidth, fOriginalHeight);
+	}
 }
