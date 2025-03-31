@@ -19,12 +19,16 @@ class MainWindow : public BWindow {
 public:
 	bool fBigGrip;
 	bool fDontUpdate;
+	bool fZoomState;
+	int16 fOriginalWidth;
+	int16 fOriginalHeight;
 	MainView* fMainView;
 
 	MainWindow();
 	virtual bool QuitRequested();
 	virtual void FrameResized(float W, float H);
 	virtual void MessageReceived(BMessage* message);
+	virtual void Zoom(BPoint origin, float width, float height);
 };
 
 #endif

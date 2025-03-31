@@ -343,6 +343,7 @@ MainView::MessageReceived(BMessage* message)
 				((Resizer*)be_app)->fOptionWin->fOptionView->Sync();
 				((Resizer*)be_app)->fOptionWin->Unlock();
 				GetImage(path.Path());
+				Window()->PostMessage(CHANGE_FILE);
 			}
 
 			else {
