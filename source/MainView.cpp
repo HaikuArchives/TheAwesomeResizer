@@ -296,8 +296,8 @@ MainView::Draw(BRect rect)
 	fOffscreenBitmap->Lock(); // protect the offscreen bitmap against changes
 
 	((Resizer*)be_app)->fOptionWin->Lock();
-	bool smoothScaling = ((Resizer*)be_app)->fOptionWin->fOptionView->fSmoothBox->Value() != 0;
-	((Resizer*)be_app)->fOptionWin->fOptionView->Sync();
+	bool smoothScaling = ((Resizer*)be_app)->fOptionWin->fSmoothBox->Value() != 0;
+	((Resizer*)be_app)->fOptionWin->Sync();
 	((Resizer*)be_app)->fOptionWin->Unlock();
 
 	if (!smoothScaling
@@ -339,8 +339,8 @@ MainView::MessageReceived(BMessage* message)
 				BEntry Entry(&ref);
 				Entry.GetPath(&path);
 				((Resizer*)be_app)->fOptionWin->Lock();
-				((Resizer*)be_app)->fOptionWin->fOptionView->fFileName->SetText(ref.name);
-				((Resizer*)be_app)->fOptionWin->fOptionView->Sync();
+				((Resizer*)be_app)->fOptionWin->fFileName->SetText(ref.name);
+				((Resizer*)be_app)->fOptionWin->Sync();
 				((Resizer*)be_app)->fOptionWin->Unlock();
 				GetImage(path.Path());
 				Window()->PostMessage(CHANGE_FILE);
@@ -447,8 +447,8 @@ MainView::MouseDown(BPoint where)
 
 	((Resizer*)be_app)->fOptionWin->Lock();
 	Message.AddString("be:clip_name",
-		((Resizer*)be_app)->fOptionWin->fOptionView->fFileName->Text());
-	((Resizer*)be_app)->fOptionWin->fOptionView->Sync();
+		((Resizer*)be_app)->fOptionWin->fFileName->Text());
+	((Resizer*)be_app)->fOptionWin->Sync();
 	((Resizer*)be_app)->fOptionWin->Unlock();
 
 	DragMessage(&Message, BRect(where.x - 10, where.y - 10, where.x + 10, where.y + 10), Window());
@@ -871,9 +871,9 @@ void
 MainView::GrabScreen()
 {
 	((Resizer*)be_app)->fOptionWin->Lock();
-	((Resizer*)be_app)->fOptionWin->fOptionView->fFileName->SetText("screenshot");
+	((Resizer*)be_app)->fOptionWin->fFileName->SetText("screenshot");
 	((Resizer*)be_app)->fOptionWin->Hide();
-	((Resizer*)be_app)->fOptionWin->fOptionView->Sync();
+	((Resizer*)be_app)->fOptionWin->Sync();
 	((Resizer*)be_app)->fOptionWin->Unlock();
 	Window()->Hide();
 
@@ -913,7 +913,7 @@ MainView::GrabScreen()
 	Window()->Show();
 	((Resizer*)be_app)->fOptionWin->Lock();
 	((Resizer*)be_app)->fOptionWin->Show();
-	((Resizer*)be_app)->fOptionWin->fOptionView->Sync();
+	((Resizer*)be_app)->fOptionWin->Sync();
 	((Resizer*)be_app)->fOptionWin->Unlock();
 	Flush();
 }
@@ -965,9 +965,9 @@ MainView::SmoothScale()
 	oh = (int)fOriginalBitmap->Bounds().bottom + 1;
 
 	((Resizer*)be_app)->fOptionWin->Lock();
-	int w = atoi(((Resizer*)be_app)->fOptionWin->fOptionView->fWidthTextbox->Text());
-	int h = atoi(((Resizer*)be_app)->fOptionWin->fOptionView->fHeightTextbox->Text());
-	((Resizer*)be_app)->fOptionWin->fOptionView->Sync();
+	int w = atoi(((Resizer*)be_app)->fOptionWin->fWidthTextbox->Text());
+	int h = atoi(((Resizer*)be_app)->fOptionWin->fHeightTextbox->Text());
+	((Resizer*)be_app)->fOptionWin->Sync();
 	((Resizer*)be_app)->fOptionWin->Unlock();
 
 	if ((ow < w) || (oh < h))
