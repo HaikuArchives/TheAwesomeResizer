@@ -141,16 +141,9 @@ MainView::ResizeImage()
 	}
 
 	else if (fKeepRatio) { // resize the view while keeping the ratio intact
-		// ratio = width / height
-		if (winRect.bottom >= winRect.right / fRatio) {
-			// Adjustment as a function of width
-			ResizeTo(winRect.right, winRect.right / fRatio);
-			Window()->ResizeTo(winRect.right, winRect.right / fRatio);
-		} else {
-			// Adjustment as a function of width
-			ResizeTo(winRect.bottom * fRatio, winRect.bottom);
-			Window()->ResizeTo(winRect.bottom * fRatio, winRect.bottom);
-		}
+		// Adjustment as a function of width
+		ResizeTo(winRect.bottom * fRatio, winRect.bottom);
+		Window()->ResizeTo(winRect.bottom * fRatio, winRect.bottom);
 		Invalidate();
 	}
 
