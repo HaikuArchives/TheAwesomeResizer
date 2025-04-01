@@ -14,6 +14,7 @@
 #include <Application.h>
 #include <Catalog.h>
 #include <LayoutBuilder.h>
+#include <SeparatorView.h>
 #include <String.h>
 #include <TranslatorFormats.h>
 
@@ -26,7 +27,7 @@
 OptionWindow::OptionWindow()
 	:
 	BWindow(BRect(10, 30, 10, 30), B_TRANSLATE_SYSTEM_NAME("The Awesome Resizer"), B_TITLED_WINDOW,
-		B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS)
+		B_NOT_ZOOMABLE | B_NOT_V_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	fLockH = 0;
 	fLockW = 0;
@@ -34,7 +35,7 @@ OptionWindow::OptionWindow()
 	fSavedHeight = 480;
 	fCurrentEffect = -1;
 
-	fWidthTextbox = new BTextControl(B_TRANSLATE("Width"), B_EMPTY_STRING, "", NULL);
+	fWidthTextbox = new BTextControl(B_TRANSLATE("Width"), B_TRANSLATE("Size:"), "", NULL);
 	fWidthTextbox->SetModificationMessage(new BMessage(MOD_WIDTH));
 
 	fHeightTextbox = new BTextControl(B_TRANSLATE("Height"), B_EMPTY_STRING, "", NULL);
@@ -72,35 +73,38 @@ OptionWindow::OptionWindow()
 	//  fWebButton = new BButton("About", B_TRANSLATE("About"), new BMessage(B_ABOUT_REQUESTED));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, B_USE_HALF_ITEM_SPACING)
-		.SetInsets(B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING, B_USE_DEFAULT_SPACING,
-			B_USE_DEFAULT_SPACING)
-		.AddGroup(B_HORIZONTAL, B_USE_ITEM_SPACING)
-		.Add(new BStringView("Size", B_TRANSLATE("Size:")))
-		.Add(fWidthTextbox)
-		.Add(new BStringView("separator", "x"))
-		.Add(fHeightTextbox)
-		.End()
+		.SetInsets(B_USE_DEFAULT_SPACING)
+		.AddGroup(B_HORIZONTAL, 3)
+			.Add(fWidthTextbox)
+			.Add(new BStringView("separator", "×"))
+			.Add(fHeightTextbox)
+			.End()
 		.Add(fAspectBox)
 		.Add(fSmoothBox)
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
+		.Add(new BSeparatorView(B_HORIZONTAL))
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
+		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
+			.Add(fFileName->CreateLabelLayoutItem(), 0, 0)
+			.Add(fFileName->CreateTextViewLayoutItem(), 1, 0)
+			.Add(fFormatMenu->CreateLabelLayoutItem(), 0, 1)
+			.Add(fFormatMenu->CreateMenuBarLayoutItem(), 1, 1)
+			.End()
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
+		.Add(new BSeparatorView(B_HORIZONTAL))
+		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
 		//			.Add(Grip)
 		//			.Add(Coord)
-		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
 		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-		.Add(fFileName->CreateLabelLayoutItem(), 0, 0)
-		.Add(fFileName->CreateTextViewLayoutItem(), 1, 0)
-		.Add(fFormatMenu->CreateLabelLayoutItem(), 0, 1)
-		.Add(fFormatMenu->CreateMenuBarLayoutItem(), 1, 1)
-		.End()
-		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
-
-		.AddGrid(B_USE_HALF_ITEM_SPACING, B_USE_HALF_ITEM_SPACING)
-		.Add(fResetButton, 0, 0)
-		.Add(fUndoButton, 1, 0)
-		//			.Add(Web, 0, 1)
-		.Add(fEffectMenu, 0, 1, 2)
-		.Add(fApplyButton, 0, 2, 2)
+			.Add(fResetButton, 0, 0)
+			.Add(fUndoButton, 1, 0)
+			//			.Add(Web, 0, 1)
+			.Add(fEffectMenu, 0, 1, 2)
+			.Add(fApplyButton, 0, 2, 2)
+			.End()
 		.End();
 
+	fAspectBox->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	fSmoothBox->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	fResetButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	fUndoButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
