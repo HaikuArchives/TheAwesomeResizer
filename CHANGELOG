@@ -1,0 +1,27 @@
+
+## Changelog
+
+#### What's new (in v3.3)?
+- Support for localization.
+- Click into dropzone window for file open dialog.
+
+#### What's new (in v3.2)?
+- New Coord window shows current mouse position & size of current selection.
+- New Grip option allows easier resizing. (bigger resize corner)
+
+#### What's new (in v3.1)?
+- Recompiled for R5.
+
+#### What's new (in v3.0)?
+- Undo (for most effects, 8 levels of undo max)
+- Smooth scaling (when shrinking image)
+- Fixed a bug in the "blur" effect.
+- And misc. improvements
+
+#### What's new (in v2.2)?
+- The selection rectangle flick less than before.
+- New color swaping effects
+- Added progress indicator in the Title Tab.
+
+#### What's new (in v2.1)?
+- Nothing except that TAResizer is now FREEWARE !!!
