@@ -36,7 +36,7 @@
 
 MainView::MainView()
 	:
-	BView(BRect(0, 0, 200, 100), "Image", B_FOLLOW_NONE, B_WILL_DRAW)
+	BView(BRect(0, 0, 400, 100), "Image", B_FOLLOW_NONE, B_WILL_DRAW)
 {
 	SetViewColor(128, 128, 128);
 	fOriginalBitmap = NULL;
@@ -242,13 +242,14 @@ void
 MainView::Draw(BRect rect)
 {
 	BRect B = Bounds();
-	if (fOriginalBitmap == NULL) { // on fait un petit fill bon chic bon genre
+	if (fOriginalBitmap == NULL) {
 		BRect bounds = B;
 		const pattern stripePattern = {0xcc, 0x66, 0x33, 0x99, 0xcc, 0x66, 0x33, 0x99};
-		const char* stringMessage = B_TRANSLATE("Drag and drop an image");
 
 		font_height fontHeight;
 		GetFontHeight(&fontHeight);
+		const char* stringMessage = B_TRANSLATE_COMMENT(
+			"Drag and drop to open/save an image", "Short as possible");
 		const char* text = stringMessage;
 
 		float width = StringWidth(text);
@@ -315,8 +316,9 @@ MainView::Draw(BRect rect)
 	fOffscreenBitmap->RemoveChild(fOffscreenView);
 
 	if (fClipPoint1 != BPoint(-1, -1) && fClipPoint2 != BPoint(-1, -1)) {
-		SetHighColor(255, 0, 255, 255);
-		StrokeRect(GetRegion());
+		SetHighColor(180, 0, 180, 255);
+		SetLowColor(255, 255, 255);
+		StrokeRect(GetRegion(), B_MIXED_COLORS);
 		SetHighColor(255, 255, 255, 255);
 	}
 

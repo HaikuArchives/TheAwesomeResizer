@@ -23,7 +23,7 @@ using std::deque;
 typedef deque<BBitmap*>::iterator ITER;
 
 class MainView : public BView {
-	BBitmap* fFirstBitmap; // the Bitmap dropped a launch
+	BBitmap* fFirstBitmap; // the Bitmap dropped at launch
 	BBitmap* fOriginalBitmap; // current bitmap
 	BBitmap* fModifiedBitmap; // used for clipping
 	BBitmap* fOffscreenBitmap; // used for offscreen drawing
