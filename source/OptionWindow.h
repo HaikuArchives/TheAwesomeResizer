@@ -44,6 +44,7 @@ private:
 	void _CreateFormatPopup();
 	void _SetHeight(int height);
 	void _SetWidth(int width);
+	void _ShowTranslatorSettings();
 
 	int fSavedHeight;
 	int fSavedWidth;
@@ -60,6 +61,7 @@ private:
 	BPopUpMenu* fFormatPopup;
 	BMenuField* fEffectMenu;
 	BPopUpMenu* fEffectPopup;
+	BWindow* fTranslatorSettingsWindow;
 };
 
 #endif
