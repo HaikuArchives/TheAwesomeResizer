@@ -11,9 +11,11 @@
 #include "main.h"
 
 #include <AboutWindow.h>
+#include <Alert.h>
 #include <Application.h>
 #include <Catalog.h>
 #include <LayoutBuilder.h>
+#include <MessageFilter.h>
 #include <SeparatorView.h>
 #include <String.h>
 #include <TranslatorFormats.h>
@@ -24,10 +26,31 @@
 #define B_TRANSLATION_CONTEXT "OptionView"
 
 
+class QuitMessageFilter : public BMessageFilter {
+public:
+	QuitMessageFilter(BWindow* window)
+		:
+		BMessageFilter((uint32)B_QUIT_REQUESTED),
+		fWindow(window)
+	{
+	}
+
+	virtual filter_result Filter(BMessage* message, BHandler** target)
+	{
+		BMessenger(fWindow).SendMessage(CLOSE_TRANSLATOR_SETTINGS);
+		return B_SKIP_MESSAGE;
+	}
+
+private:
+	BWindow* fWindow;
+};
+
+
 OptionWindow::OptionWindow()
 	:
 	BWindow(BRect(10, 30, 10, 30), B_TRANSLATE_SYSTEM_NAME("The Awesome Resizer"), B_TITLED_WINDOW,
-		B_NOT_ZOOMABLE | B_NOT_V_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS)
+		B_NOT_ZOOMABLE | B_NOT_V_RESIZABLE | B_AUTO_UPDATE_SIZE_LIMITS),
+	fTranslatorSettingsWindow(NULL)
 {
 	fLockH = 0;
 	fLockW = 0;
@@ -51,6 +74,9 @@ OptionWindow::OptionWindow()
 	_CreateFormatPopup();
 	((Resizer*)be_app)->fMainWin->Unlock();
 	fFormatMenu = new BMenuField("DropTranslator", B_TRANSLATE("Format:"), fFormatPopup);
+
+	BButton* translatorSettings = new BButton("TranslatorSettings",
+		B_TRANSLATE("Settings" B_UTF8_ELLIPSIS), new BMessage(TRANSLATOR_SETTINGS));
 
 	fResetButton = new BButton("Reset", B_TRANSLATE("Reset"), new BMessage(RESET));
 	fUndoButton = new BButton("Undo", B_TRANSLATE("Undo"), new BMessage(UNDO));
@@ -89,6 +115,7 @@ OptionWindow::OptionWindow()
 			.Add(fFileName->CreateTextViewLayoutItem(), 1, 0)
 			.Add(fFormatMenu->CreateLabelLayoutItem(), 0, 1)
 			.Add(fFormatMenu->CreateMenuBarLayoutItem(), 1, 1)
+			.Add(translatorSettings, 1, 2)
 			.End()
 		.Add(BSpaceLayoutItem::CreateVerticalStrut(B_USE_HALF_ITEM_SPACING))
 		.Add(new BSeparatorView(B_HORIZONTAL))
@@ -106,6 +133,7 @@ OptionWindow::OptionWindow()
 
 	fAspectBox->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	fSmoothBox->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
+	translatorSettings->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	fResetButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	fUndoButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
 	// fWebButton->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, B_SIZE_UNSET));
@@ -126,6 +154,15 @@ void
 OptionWindow::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
+		case TRANSLATOR_SETTINGS:
+			_ShowTranslatorSettings();
+			break;
+		case CLOSE_TRANSLATOR_SETTINGS:
+		{
+			fTranslatorSettingsWindow->Lock();
+			fTranslatorSettingsWindow->Quit();
+			fTranslatorSettingsWindow = NULL;
+		} break;
 		case RATIO: // redirect message to MainWindow
 		case CHANGE_OUTPUT_FORMAT:
 		case ROTATE:
@@ -159,7 +196,7 @@ OptionWindow::MessageReceived(BMessage* message)
 			const char* authors[] = {"Jonathan Villemure", NULL};
 			aboutWin->AddAuthors(authors);
 			aboutWin->Show();
-		}
+		} break;
 		case COORD:
 			((Resizer*)be_app)->fMouseWin->PostMessage(message);
 			break;
@@ -400,3 +437,44 @@ OptionWindow::_SetWidth(int width)
 }
 
 
+void
+OptionWindow::_ShowTranslatorSettings()
+{
+	// Create a window with a configuration view
+	BView* view;
+	BRect rect(0, 0, 239, 239);
+
+	translator_id* all_translators = NULL;
+	int32 numTranslators = 0;
+	BTranslatorRoster* roster = BTranslatorRoster::Default();
+	status_t status = roster->GetAllTranslators(&all_translators, &numTranslators);
+	if (status != B_OK)
+		return;
+
+	int currentTranslator = ((Resizer*)be_app)->fMainWin->fMainView->fCurrentTranslator;
+	status = BTranslatorRoster::Default()->MakeConfigurationView(
+		all_translators[currentTranslator], NULL, &view, &rect);
+
+	if (status != B_OK || view == NULL) {
+		// TODO: proper translation, better error dialog
+		BAlert* alert = new BAlert(NULL, strerror(status), B_TRANSLATE("OK"));
+		alert->SetFlags(alert->Flags() | B_CLOSE_ON_ESCAPE);
+		alert->Go();
+	} else if (fTranslatorSettingsWindow != NULL) {
+		fTranslatorSettingsWindow->RemoveChild(fTranslatorSettingsWindow->ChildAt(0));
+		float width, height;
+		view->GetPreferredSize(&width, &height);
+		fTranslatorSettingsWindow->ResizeTo(width, height);
+		fTranslatorSettingsWindow->AddChild(view);
+		fTranslatorSettingsWindow->Activate();
+	} else {
+		fTranslatorSettingsWindow = new BWindow(rect,
+			B_TRANSLATE("Translator Settings"),
+			B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL,
+			B_NOT_ZOOMABLE | B_NOT_RESIZABLE);
+		fTranslatorSettingsWindow->AddFilter(new QuitMessageFilter(this));
+		fTranslatorSettingsWindow->AddChild(view);
+		fTranslatorSettingsWindow->CenterIn(Frame());
+		fTranslatorSettingsWindow->Show();
+	}
+}

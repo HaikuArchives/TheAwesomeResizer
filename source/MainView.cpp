@@ -1244,7 +1244,7 @@ void
 MainView::ClearImage()
 {
 	fOriginalBitmap = NULL;
-	Window()->ResizeTo(200, 100);
+	Window()->ResizeTo(400, 100);
 	Window()->SetTitle(B_TRANSLATE("TAR: (No image)"));
 	Invalidate();
 }
