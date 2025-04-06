@@ -19,7 +19,7 @@
 
 MainWindow::MainWindow()
 	:
-	BWindow(BRect(240, 30, 440, 130), B_TRANSLATE("TAR: (No image)"), B_DOCUMENT_WINDOW,
+	BWindow(BRect(240, 30, 640, 130), B_TRANSLATE("TAR: (No image)"), B_DOCUMENT_WINDOW,
 		B_WILL_ACCEPT_FIRST_CLICK)
 {
 	fMainView = new MainView();
