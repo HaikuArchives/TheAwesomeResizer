@@ -33,6 +33,8 @@
 #define min(a, b) ((a) > (b) ? (b) : (a))
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
+const int FACTOR = 2;
+
 
 MainView::MainView()
 	:
@@ -698,9 +700,9 @@ MainView::Dark()
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			CurrentColor = ((rgb_color*)fOriginalBitmap->Bits())[row * widthSize + col];
-			r = CurrentColor.red - 8;
-			g = CurrentColor.green - 8;
-			b = CurrentColor.blue - 8;
+			r = CurrentColor.red - FACTOR;
+			g = CurrentColor.green - FACTOR;
+			b = CurrentColor.blue - FACTOR;
 			if (r < 0)
 				r = 0;
 			if (g < 0)
@@ -736,9 +738,9 @@ MainView::Light()
 	for (int row = 0; row < height; row++) {
 		for (int col = 0; col < width; col++) {
 			CurrentColor = ((rgb_color*)fOriginalBitmap->Bits())[row * widthSize + col];
-			r = CurrentColor.red + 8;
-			g = CurrentColor.green + 8;
-			b = CurrentColor.blue + 8;
+			r = CurrentColor.red + FACTOR;
+			g = CurrentColor.green + FACTOR;
+			b = CurrentColor.blue + FACTOR;
 			if (r > 255)
 				r = 255;
 			if (g > 255)
