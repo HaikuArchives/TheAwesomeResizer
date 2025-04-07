@@ -320,9 +320,11 @@ OptionWindow::_CreateEffectPopup()
 	FlipV->AddInt16("Effect", FLIPV);
 	fEffectPopup->AddItem(new BMenuItem(B_TRANSLATE("Flip left-right"), FlipV));
 
-	BMessage* Light = new BMessage(CHANGE_EFFECT);
-	Light->AddInt16("Effect", LIGHT);
-	fEffectPopup->AddItem(new BMenuItem(B_TRANSLATE("Light"), Light));
+	fEffectPopup->AddItem(new BSeparatorItem());
+
+	BMessage* Bright = new BMessage(CHANGE_EFFECT);
+	Bright->AddInt16("Effect", LIGHT);
+	fEffectPopup->AddItem(new BMenuItem(B_TRANSLATE("Brightness"), Bright));
 
 	BMessage* Dark = new BMessage(CHANGE_EFFECT);
 	Dark->AddInt16("Effect", DARK);
@@ -339,6 +341,8 @@ OptionWindow::_CreateEffectPopup()
 	BMessage* Drunk = new BMessage(CHANGE_EFFECT);
 	Drunk->AddInt16("Effect", DRUNK);
 	fEffectPopup->AddItem(new BMenuItem(B_TRANSLATE("Drunk"), Drunk));
+
+	fEffectPopup->AddItem(new BSeparatorItem());
 
 	BMessage* Baw = new BMessage(CHANGE_EFFECT);
 	Baw->AddInt16("Effect", BAW);
@@ -359,6 +363,8 @@ OptionWindow::_CreateEffectPopup()
 	BMessage* Sgb = new BMessage(CHANGE_EFFECT);
 	Sgb->AddInt16("Effect", SGB);
 	fEffectPopup->AddItem(new BMenuItem(B_TRANSLATE("Swap green-blue"), Sgb));
+
+	fEffectPopup->AddItem(new BSeparatorItem());
 
 	BMessage* Screenshot = new BMessage(CHANGE_EFFECT);
 	Screenshot->AddInt16("Effect", SCREENSHOT);

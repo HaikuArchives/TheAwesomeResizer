@@ -1,4 +1,4 @@
-1	English	application/x-vnd.TAResizer	2305805382
+1	English	application/x-vnd.TAResizer	3537490655
 A simple application that allows quick dynamic resizing of any translator supported image and much much more.	OptionView		A simple application that allows quick dynamic resizing of any translator supported image and much much more.
 Darkness	OptionView		Darkness
 Flip left-right	OptionView		Flip left-right
@@ -6,7 +6,6 @@ Reset	OptionView		Reset
 Undo	OptionView		Undo
 The Awesome Resizer	System name		The Awesome Resizer
 Width	OptionView		Width
-Light	OptionView		Light
 OK	OptionView		OK
 Height	OptionView		Height
 Smooth scaling	OptionView		Smooth scaling
@@ -25,6 +24,7 @@ Swap red-blue	OptionView		Swap red-blue
 TAR: (No image)	MainView		TAR: (No image)
 TAR: (No image)	MainWindow		TAR: (No image)
 Invert	OptionView		Invert
+Brightness	OptionView		Brightness
 Size:	OptionView		Size:
 90° rotation	OptionView		90° rotation
 Settings…	OptionView		Settings…
