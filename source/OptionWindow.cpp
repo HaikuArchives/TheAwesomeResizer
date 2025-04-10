@@ -475,7 +475,7 @@ OptionWindow::_ShowTranslatorSettings()
 		fTranslatorSettingsWindow->Activate();
 	} else {
 		fTranslatorSettingsWindow = new BWindow(rect,
-			B_TRANSLATE("Translator Settings"),
+			B_TRANSLATE("Translator settings"),
 			B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL,
 			B_NOT_ZOOMABLE | B_NOT_RESIZABLE);
 		fTranslatorSettingsWindow->AddFilter(new QuitMessageFilter(this));
