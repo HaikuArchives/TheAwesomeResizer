@@ -1,6 +1,16 @@
 
 ## Changelog
 
+#### What's new (in v3.4)?
+- Minor GUI and label changes, adding separators and grouping effects
+- Processing indicator in window title
+- Zoom button in window title to resize window to fit in screen
+- Better visibility of selection window by alternating colors
+- Improved resize handling
+- Added button to open Translator settings
+- Smaller steps when in/decreasing brightness and darkness
+- Added translations, thanks all translators!
+
 #### What's new (in v3.3)?
 - Support for localization.
 - Click into dropzone window for file open dialog.
