@@ -1,0 +1,38 @@
+1	Friulian	application/x-vnd.TAResizer	2402588927
+90° rotation	OptionView		Rotazion di 90°
+A simple application that allows quick dynamic resizing of any translator supported image and much much more.	OptionView		A simple application that allows quick dynamic resizing of any translator supported image and much much more.
+Apply	OptionView		Apliche
+Blur	OptionView		Fûr fûc
+Brightness	OptionView		Brightness
+Choose	OptionView		Sielç
+Choose an action	OptionView		Sielç une azion
+Darkness	OptionView		Scuretât
+Drunk	OptionView		Cjoc
+Filename:	OptionView		Non file:
+Flip left-right	OptionView		Savolte çampe-diestre
+Flip top-bottom	OptionView		Savolte sore-sot
+Format:	OptionView		Formât:
+Grayscale	OptionView		Scjale di grîs
+Height	OptionView		Altece
+Invert	OptionView		Invertìs
+Melt	OptionView		Disfe/scuaiâ
+OK	OptionView		Va ben
+Preserve aspect ratio	OptionView		Manten proporzions
+Reset	OptionView		Ripristine
+Screenshot	OptionView		Videade
+Settings…	OptionView		Settings…
+Size:	OptionView		Dimension:
+Smooth scaling	OptionView		Ridimensionament uniformi
+Swap green-blue	OptionView		Scambie vert-blu
+Swap red-blue	OptionView		Scambie ros-blu
+Swap red-green	OptionView		Scambie ros-vert
+TAResizer	OptionView		TAResizer
+Translator settings	OptionView		Translator settings
+Undo	OptionView		Disfe
+Width	OptionView		Largjece
+Drag and drop to open/save an image	MainView	Short as possible	Drag and drop to open/save an image
+TAR: (No image)	MainView		TAR: (No image)
+Working…	MainView		In vore…
+Out of range	MouseView		Fûr dai limits
+TAR: (No image)	MainWindow		TAR: (No image)
+The Awesome Resizer	System name		The Awesome Resizer

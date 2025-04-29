@@ -1,40 +1,38 @@
-1	Norwegian	application/x-vnd.TAResizer	2403903214
-Size	MouseView		Størrelse
-Darkness	OptionView		Mørk
-Flip Left-Right	OptionView		Vend Venstre-Høyre
-Reset	OptionView		Tilbakestill
-90 Rotation	OptionView		90 Rotering
-Undo	OptionView		Angre
-About	OptionView		Om
-Light	OptionView		Lys
-Width	OptionView		Bredde
-The Awesome Resizer	System name		The Awesome Resizer
-Height	OptionView		Høyde
-Smooth scaling	OptionView		Myk skalering
-Blur	OptionView		Uskarp
-Screenshot	OptionView		Skjermbilde
-Preserve aspect ratio	OptionView		Behold størrelsesforhold
-Choose	OptionView		Velg
-Drunk	OptionView		Full
-Swap Green-Blue	OptionView		Bytt Grønn-Blå
+1	Norwegian	application/x-vnd.TAResizer	2402588927
+90° rotation	OptionView		90° rotering
+A simple application that allows quick dynamic resizing of any translator supported image and much much more.	OptionView		En enkel applikasjon som lar deg endre størrelsen på ethvert støttet bildeformat, og mye mye mer.
 Apply	OptionView		Bruk
-Swap Red-Blue	OptionView		Bytt Rød-Blå
-Coordinates window	OptionView		Koordinatvindu
-Invert	OptionView		Inverter
-TAResizer	OptionWindow		TAResizer
-Size:	OptionView		Størrelse:
-A simple application that allows quick dynamic resizing of any translator supported image and much much more.	OptionWindow		Et enkelt program som lar deg raskt og dynamisk endre størrelsen på støttede bildeformater, og mye mye mer.
-Load	OptionView		Last
-Drag and drop an image	MainView		Dra og slipp et bilde
-Coord	MouseView		Koord
-Filename:	OptionView		Filnavn:
-Save	OptionView		Lagre
-Format:	OptionView		Format:
-Swap Red-Green	OptionView		Bytt Rød-Grønn
-Options	OptionWindow		Innstillinger
+Blur	OptionView		Uskarp
+Brightness	OptionView		Lysstyrke
+Choose	OptionView		Velg
 Choose an action	OptionView		Velg en effekt
-Working…	MainView		Jobber…
-Out of Range	MouseView		Ute av rekvidde
-Flip Top-Bottom	OptionView		Vend Topp-Bunn
+Darkness	OptionView		Mørk
+Drunk	OptionView		Full
+Filename:	OptionView		Filnavn:
+Flip left-right	OptionView		Vend venstre-høyre
+Flip top-bottom	OptionView		Vend topp-bunn
+Format:	OptionView		Format:
+Grayscale	OptionView		Gråtone
+Height	OptionView		Høyde
+Invert	OptionView		Inverter
 Melt	OptionView		Smelt
-Black & White	OptionView		Svart & Hvit
+OK	OptionView		OK
+Preserve aspect ratio	OptionView		Behold størrelsesforhold
+Reset	OptionView		Tilbakestill
+Screenshot	OptionView		Skjermbilde
+Settings…	OptionView		Innstillinger…
+Size:	OptionView		Størrelse:
+Smooth scaling	OptionView		Myk skalering
+Swap green-blue	OptionView		Bytt grønn-blå
+Swap red-blue	OptionView		Bytt rød-blå
+Swap red-green	OptionView		Bytt rød-grønn
+TAResizer	OptionView		TAResizer
+Translator settings	OptionView		Innstillinger for oversetter
+Undo	OptionView		Angre
+Width	OptionView		Bredde
+Drag and drop to open/save an image	MainView	Short as possible	Dra og slipp for å åpne/lagre et bilde
+TAR: (No image)	MainView		TAR: (Uten bilde)
+Working…	MainView		Jobber…
+Out of range	MouseView		Ute av rekvidde
+TAR: (No image)	MainWindow		TAR: (Uten bilde)
+The Awesome Resizer	System name		The Awesome Resizer

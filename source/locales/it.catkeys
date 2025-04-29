@@ -1,0 +1,38 @@
+1	Italian	application/x-vnd.TAResizer	2402588927
+90° rotation	OptionView		Ruota di 90°
+A simple application that allows quick dynamic resizing of any translator supported image and much much more.	OptionView		Una semplice applicazione che consente il ridimensionamento rapido e dinamico di qualsiasi immagine supportata da un traduttore e molto, molto altro ancora.
+Apply	OptionView		Applica
+Blur	OptionView		Sfoca
+Brightness	OptionView		Luminosità
+Choose	OptionView		Scegli
+Choose an action	OptionView		Scegli un'azione
+Darkness	OptionView		Scurisci
+Drunk	OptionView		Effetto mosso
+Filename:	OptionView		Nome del file:
+Flip left-right	OptionView		Ribalta orizzontalmente
+Flip top-bottom	OptionView		Ribalta verticalmente
+Format:	OptionView		Formato:
+Grayscale	OptionView		Scala di grigi
+Height	OptionView		Altezza
+Invert	OptionView		Inverti
+Melt	OptionView		Sciogli
+OK	OptionView		OK
+Preserve aspect ratio	OptionView		Mantieni le proporzioni
+Reset	OptionView		Ripristina
+Screenshot	OptionView		Scatta un'istantanea
+Settings…	OptionView		Impostazioni…
+Size:	OptionView		Dimensione:
+Smooth scaling	OptionView		Ridimensionamento uniforme
+Swap green-blue	OptionView		Scambia verde e blu
+Swap red-blue	OptionView		Scambia rosso e blu
+Swap red-green	OptionView		Scambia rosso e verde
+TAResizer	OptionView		TAResizer
+Translator settings	OptionView		Impostazioni del traduttore
+Undo	OptionView		Annulla
+Width	OptionView		Larghezza
+Drag and drop to open/save an image	MainView	Short as possible	Trascina per aprire o salvare un'immagine
+TAR: (No image)	MainView		TAR: (nessun'immagine)
+Working…	MainView		All'opera…
+Out of range	MouseView		Fuori intervallo
+TAR: (No image)	MainWindow		TAR: (nessun'immagine)
+The Awesome Resizer	System name		The Awesome Resizer
