@@ -21,10 +21,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: korli/action@v0.25.0-haiku3
+      - uses: korli/action@v0.25.0-haiku4
         with:
           operating_system: ${{ matrix.config.os }}
           version: ${{ matrix.config.version }}
           architecture: ${{ matrix.config.architecture }}
           run: |
-            ssh user@localhost "pkgman install -y haiku_devel makefile_engine cmd:gcc cmd:make" && cd source && make
+            ssh user@localhost "pkgman install -y makefile_engine cmd:gcc cmd:make" && cd source && make
